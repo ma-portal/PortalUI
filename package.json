@@ -7,11 +7,13 @@
     "@types/node": "12.0.4",
     "@types/react": "16.8.19",
     "@types/react-dom": "16.8.4",
+    "move-js": "visionmedia/move.js",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.1",
+    "typed.js": "^2.0.10",
     "typescript": "3.5.1"
   },
   "scripts": {
