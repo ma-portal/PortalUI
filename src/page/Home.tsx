@@ -5,7 +5,9 @@ export default class Home extends React.Component {
 
     render() {
         return (
-            <Sidebar.Pushable as={Segment}>
+            <Sidebar.Pushable as={Segment} style={{
+                
+            }}>
                 <Sidebar
                     as={Menu}
                     animation='slide out'
