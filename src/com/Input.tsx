@@ -34,9 +34,8 @@ export default class Input extends React.Component<Props, State> {
     render() {
         const { initValue, transparent, type, placeholder, spellCheck=false, onChange } = this.props;
         const { focus } = this.state;
-        let style: any = {
-            outline: 'none',
-            border: 'none',
+        let baseStyle: any = {
+            outline: 'none', border: 'none',
             display: 'inline-block',
             position: 'relative',
             verticalAlign: 'top',
@@ -47,14 +46,11 @@ export default class Input extends React.Component<Props, State> {
             padding: '1px 3px'
         };
         if (transparent) {
-            style['backgroundColor'] = 'rgba(0, 0, 0, 0)';
+            baseStyle['backgroundColor'] = 'rgba(0, 0, 0, 0)';
         }
         if (focus) {
-            style['border'] = '1px solid gray'
+            baseStyle['border'] = '1px solid gray'
         }
-        Object.keys(this.props.style).forEach((key) => {
-            style[key] = this.props.style[key];
-        })
         return (
             <input value={initValue}
                 placeholder={placeholder} 
@@ -63,7 +59,7 @@ export default class Input extends React.Component<Props, State> {
                 onChange={onChange}
                 onFocus={this.onFocus.bind(this)}
                 onBlur={this.onBlur.bind(this)}
-                style={style} />
+                style={Object.assign({}, baseStyle, this.props.style)} />
         )
     }
 
