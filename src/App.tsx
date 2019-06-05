@@ -28,7 +28,7 @@ export default class App extends React.Component<any, State> {
                     position: 'absolute',
                     width: '100%', height: '100%',
                     top: 0, left: 0,
-                    filter: inHomePage ? 'blur(2px) brightness(30%)' : ''
+                    filter: inHomePage ? 'blur(2px)' : ''
                 }} />
                 {/* <Signin /> */}
                 <Home />
