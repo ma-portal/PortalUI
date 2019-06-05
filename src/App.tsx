@@ -23,7 +23,7 @@ export default class App extends React.Component<any, State> {
                     width: '100%', height: '100%',
                 }}>
                 <div style={{
-                    backgroundImage: 'url(' + require('./res/backimg.jpg') + ')',
+                    backgroundImage: 'url(' + require('./res/img/backimg.jpg') + ')',
                     backgroundSize: 'cover',
                     position: 'absolute',
                     width: '100%', height: '100%',

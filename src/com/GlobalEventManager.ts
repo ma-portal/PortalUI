@@ -66,17 +66,12 @@ class GlobalEventManager {
      * @returns 如果解绑成功返回true，失败返回false
      */
     public off(handler: Handler): boolean {
-        const evName = handler.getEventName();
-        if (!this.handlers[evName]) {
-            return false;
-        }
-        try {
-            this.handlers[evName].delete(handler.getIndex());
+        let chain = this.handlers[handler.getEventName()];
+        if (chain) {
+            chain.delete(handler.getIndex());
             return true;
         }
-        catch {
-            return false;
-        }
+        return false;
     }
 
 }

@@ -2,18 +2,13 @@ import React from 'react';
 import { Image } from 'semantic-ui-react';
 import Typed from 'typed.js';
 import {Motion, spring} from 'react-motion';
+import Events from '../Events';
+
+import intl from '../com/IntlWrapper';
 
 import Input from '../com/Input';
 import Waiting from '../com/Waiting';
-
-const quotes = [
-    'The function of education is to teach one to think intensively and to think critically. Intelligence plus character - that is the goal of true education.',
-    'Failure is simply the opportunity to begin again, this time more intelligently.',
-    'There are no great limits to growth because there are no limits of human intelligence, imagination, and wonder.',
-    'Being busy does not always mean real work. The object of all work is production or accomplishment and to either of these ends there must be forethought, system, planning, intelligence, and honest purpose, as well as perspiration. Seeming to do is not doing.',
-    'I know that I am intelligent, because I know that I know nothing.',
-    'People who fail to use their emotional intelligence skills are more likely to turn to other, less effective means of managing their mood. They are twice as likely to experience anxiety, depression, substance abuse, and even thoughts of suicide.',
-]
+import eventService from '../com/EventService';
 
 interface State {
     justInit: boolean;
@@ -21,32 +16,33 @@ interface State {
     waiting: boolean;
 }
 
-interface Props {
-
-}
-
 // TODO: there is an obvious delay after the initial animation of signin bar to do signin action
-export default class Signin extends React.Component<Props, State> {
+export default class Signin extends React.Component<any, State> {
 
-    constructor(props: Props) {
+    constructor(props: any) {
         super(props);
         this.state = {
             justInit: true,
             justSignin: false,
-            waiting: false
+            waiting: false,
         };
     }
 
     componentDidMount() {
-        new Typed('#quotes', {
-            strings: quotes,
-            typeSpeed: 50,
-            backSpeed: 0,
-            backDelay: 3000,
-            fadeOut: true,
-            loop: true,
-            cursorChar: '_'
-        })
+        if (!intl.initialized()) {
+            eventService.subscribe(Events.LocaleInitDone,
+                () => new Typed('#quotes', {
+                    strings: intl.get([], 'Signin', 'Quotes'),
+                    typeSpeed: 50,
+                    backSpeed: 0,
+                    backDelay: 3000,
+                    fadeOut: true,
+                    loop: true,
+                    cursorChar: '_'
+                }), true);
+        }
+        eventService.subscribe(Events.LocaleChange,
+            () => this.forceUpdate());
     }
 
     inputAccount(e: any) {}
@@ -72,7 +68,7 @@ export default class Signin extends React.Component<Props, State> {
         const { justInit, justSignin, waiting } = this.state;
 
         let signinBarContent = ([
-                <Image key='avatar' src={require('../res/avatar.png')} size='small' style={{
+                <Image key='avatar' src={require('../res/img/avatar.png')} size='small' style={{
                     position: 'absolute',
                     right: 330, top: 0,
                     transform: 'scale(0.8)',
@@ -84,7 +80,7 @@ export default class Signin extends React.Component<Props, State> {
                     position: 'absolute',
                     top: 0, right: 0
                 }}>
-                    <Image src={require('../res/logo.png')} size='mini' style={{
+                    <Image src={require('../res/img/logo.png')} size='mini' style={{
                         display: 'inline-block',
                         position: 'relative',
                         mixBlendMode: 'screen',
@@ -96,12 +92,14 @@ export default class Signin extends React.Component<Props, State> {
                         fontSize: '2em', color: 'white'
                     }}>Mobile AI Portal</h2>
                     <br/>
-                    <Input transparent onChange={this.inputAccount} placeholder='Account'
+                    <Input transparent onChange={this.inputAccount}
+                        placeholder={intl.get('Account', 'Signin', 'AccountInputPlaceholder')}
                         style={{
                             textAlign: 'center',
                             color: 'white'}}
                         />
-                    <Input transparent onChange={this.inputPassword} placeholder='Password' type='password'
+                    <Input transparent onChange={this.inputPassword} type='password'
+                        placeholder={intl.get('Password', 'Signin', 'PasswordInputPlaceholder')}
                         style={{
                             textAlign: 'center',
                             color: 'white'}}
