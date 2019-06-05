@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AcceleratorManager, { CombineKey, KEYS } from '../com/AcceleratorManager';
 import KBS from "./sub-page/KBS";
+import Profile from "./sub-page/Profile";
 
 interface Props {
     newGuyHere?: boolean
@@ -25,12 +26,12 @@ export default class Home extends React.Component<Props, State> {
     componentDidMount() {
         // bind accelerator
         AcceleratorManager.register(() => this.toggleSideBar(),
-            new CombineKey(KEYS.M, false, true));
+            new CombineKey(KEYS.Q, false, true));
         // send toast if needed
         if (this.props.newGuyHere || true) {
             toast(
                 <span>
-                    Hi, new there! Welcome to Mobile AI Portal! Why don't you press <b>CTRL + M</b> to meet something interesting?
+                    Hi, new there! Welcome to Mobile AI Portal! Why don't you press <strong>CTRL + Q</strong> to meet something interesting?
                 </span>,
                 { position: toast.POSITION.BOTTOM_LEFT }
             )
@@ -74,7 +75,8 @@ export default class Home extends React.Component<Props, State> {
                         padding: 0,
                         width: '100%', height: '100%',
                     }}>
-                        <KBS />
+                        {/* <KBS /> */}
+                        <Profile />
                         <ToastContainer autoClose={8000} />
                     </Segment>
                 </Sidebar.Pusher>
