@@ -3,6 +3,8 @@ import { Image } from 'semantic-ui-react';
 import Typed from 'typed.js';
 import {Motion, spring} from 'react-motion';
 import Events from '../Events';
+import axios from 'axios';
+import config from '../Config.json';
 
 import intl from '../com/IntlWrapper';
 
@@ -14,10 +16,14 @@ interface State {
     justInit: boolean;
     justSignin: boolean;
     waiting: boolean;
+    focusPwInput: boolean;
 }
 
 // TODO: there is an obvious delay after the initial animation of signin bar to do signin action
 export default class Signin extends React.Component<any, State> {
+
+    private account: string;
+    private password: string;
 
     constructor(props: any) {
         super(props);
@@ -25,29 +31,37 @@ export default class Signin extends React.Component<any, State> {
             justInit: true,
             justSignin: false,
             waiting: false,
+            focusPwInput: false
         };
     }
 
     componentDidMount() {
         if (!intl.initialized()) {
             eventService.subscribe(Events.LocaleInitDone,
-                () => new Typed('#quotes', {
-                    strings: intl.get([], 'Signin', 'Quotes'),
-                    typeSpeed: 50,
-                    backSpeed: 0,
-                    backDelay: 3000,
-                    fadeOut: true,
-                    loop: true,
-                    cursorChar: '_'
-                }), true);
+                () => {
+                    new Typed('#quotes', {
+                        strings: intl.get([], 'Signin', 'Quotes'),
+                        typeSpeed: 50,
+                        backSpeed: 0,
+                        backDelay: 3000,
+                        fadeOut: true,
+                        loop: true,
+                        cursorChar: '_'
+                    });
+                    this.forceUpdate();
+            }, true);
         }
         eventService.subscribe(Events.LocaleChange,
             () => this.forceUpdate());
     }
 
-    inputAccount(e: any) {}
+    inputAccount(e: React.ChangeEvent<HTMLInputElement>) {
+        this.account = e.target.value;
+    }
 
-    inputPassword(e: any) {}
+    inputPassword(e: React.ChangeEvent<HTMLInputElement>) {
+        this.password = e.target.value;
+    }
 
     afterInitialize() {
         this.setState({justInit: false});
@@ -55,8 +69,35 @@ export default class Signin extends React.Component<any, State> {
 
     signin() {
         if (!this.state.justInit) {
-            this.setState({justSignin: true});
+            // init期间不允许登陆
+            // 值校验
+            if (!this.account || !this.valueCheck(this.account)) {
+                // TODO: notify user
+                console.log('invalid account character');
+            } else if (!this.password || !this.valueCheck(this.password)) {
+                console.log('invalid password character');
+            } else {
+                // 发起验证请求
+                axios.post(config.server.addr + '/account/signin',
+                        { account: this.account, password: this.password })
+                    .then((rep) => {
+                        this.setState({justSignin: true});
+                    });
+            }
         }
+    }
+
+    private valueCheck(value: string): boolean {
+        for (let c of value) {
+            if (c.charCodeAt(0) === 95   // '_'
+                || ('0' <= c && c <= '9')
+                || ('A' <= c && c <= 'Z')
+                || ('a' <= c && c <= 'z')
+            )
+                continue;
+            return false;
+        }
+        return true;
     }
 
     afterSignin() {
@@ -65,7 +106,7 @@ export default class Signin extends React.Component<any, State> {
     }
 
     render() {
-        const { justInit, justSignin, waiting } = this.state;
+        const { justInit, justSignin, waiting, focusPwInput } = this.state;
 
         let signinBarContent = ([
                 <Image key='avatar' src={require('../res/img/avatar.png')} size='small' style={{
@@ -92,14 +133,17 @@ export default class Signin extends React.Component<any, State> {
                         fontSize: '2em', color: 'white'
                     }}>Mobile AI Portal</h2>
                     <br/>
-                    <Input transparent onChange={this.inputAccount}
+                    <Input transparent onChange={this.inputAccount.bind(this)}
                         placeholder={intl.get('Account', 'Signin', 'AccountInputPlaceholder')}
                         style={{
                             textAlign: 'center',
                             color: 'white'}}
                         />
-                    <Input transparent onChange={this.inputPassword} type='password'
-                        placeholder={intl.get('Password', 'Signin', 'PasswordInputPlaceholder')}
+                    <Input transparent onChange={this.inputPassword.bind(this)} type='password'
+                        onFocus={() => this.setState({focusPwInput: true})}
+                        onBlur={() => this.setState({focusPwInput: false})}
+                        placeholder={ intl.get('Password', 'Signin',
+                            !focusPwInput ? 'PasswordInputPlaceholder1' : 'PasswordInputPlaceholder2') }
                         style={{
                             textAlign: 'center',
                             color: 'white'}}

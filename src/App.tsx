@@ -2,21 +2,9 @@ import React from 'react';
 import Signin from './page/Signin';
 import Home from './page/Home';
 
-interface State {
-    inHomePage: boolean;
-}
-
-export default class App extends React.Component<any, State> {
-
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            inHomePage: true
-        }
-    }
+export default class App extends React.Component {
 
     render() {
-        const { inHomePage } = this.state;
         return (
             <div style={{
                     position: 'relative',
@@ -28,10 +16,9 @@ export default class App extends React.Component<any, State> {
                     position: 'absolute',
                     width: '100%', height: '100%',
                     top: 0, left: 0,
-                    filter: inHomePage ? 'blur(2px)' : ''
                 }} />
-                {/* <Signin /> */}
-                <Home />
+                <Signin />
+                {/* <Home /> */}
             </div>
         );
     }

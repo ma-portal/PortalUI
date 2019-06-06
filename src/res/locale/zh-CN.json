@@ -1,7 +1,8 @@
 {
     "Signin": {
         "AccountInputPlaceholder": "账号",
-        "PasswordInputPlaceholder": "密码",
+        "PasswordInputPlaceholder1": "密码",
+        "PasswordInputPlaceholder2": "按回车结束输入",
         "Quotes": [
             "教育的作用是教人集中思考和批判性思考。智力加性格——这是教育的真正目标。",
             "失败只是重新开始的机会，这一次更明智。",

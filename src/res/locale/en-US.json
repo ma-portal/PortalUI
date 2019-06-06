@@ -1,7 +1,8 @@
 {
     "Signin": {
         "AccountInputPlaceholder": "Account",
-        "PasswordInputPlaceholder": "Password",
+        "PasswordInputPlaceholder1": "Password",
+        "PasswordInputPlaceholder2": "Press Enter to finish input",
         "Quotes": [
             "The function of education is to teach one to think intensively and to think critically. Intelligence plus character - that is the goal of true education.",
             "Failure is simply the opportunity to begin again, this time more intelligently.",

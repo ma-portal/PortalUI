@@ -8,6 +8,8 @@ interface Props {
     placeholder?: string;
     style?: any;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
+    onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 interface State {
@@ -23,16 +25,9 @@ export default class Input extends React.Component<Props, State> {
         };
     }
 
-    onFocus() {
-        this.setState({focus: true})
-    }
-
-    onBlur() {
-        this.setState({focus: false})
-    }
-
     render() {
-        const { initValue, transparent, type, placeholder, spellCheck=false, onChange } = this.props;
+        const { initValue, transparent, type, placeholder, spellCheck=false,
+            onChange, onFocus, onBlur } = this.props;
         const { focus } = this.state;
         let baseStyle: any = {
             outline: 'none', border: 'none',
@@ -57,8 +52,22 @@ export default class Input extends React.Component<Props, State> {
                 spellCheck={spellCheck}
                 type={type}
                 onChange={onChange}
-                onFocus={this.onFocus.bind(this)}
-                onBlur={this.onBlur.bind(this)}
+                onFocus={
+                    (event: React.FocusEvent<HTMLInputElement>) => {
+                        if (onFocus) {
+                            onFocus(event);
+                        }
+                        this.setState({focus: true})
+                    }
+                }
+                onBlur={
+                    (event: React.FocusEvent<HTMLInputElement>) => {
+                        if (onBlur) {
+                            onBlur(event);
+                        }
+                        this.setState({focus: false});
+                    }
+                }
                 style={Object.assign({}, baseStyle, this.props.style)} />
         )
     }
