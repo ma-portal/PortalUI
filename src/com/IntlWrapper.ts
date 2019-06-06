@@ -22,7 +22,7 @@ class IntlWrapper {
             .then(() => {
                 this.initDone = true;
                 eventService.publish(Events.LocaleInitDone);
-                console.debug('intl-universal: initialized')
+                console.debug('intl-universal initialized')
             });
     }
 

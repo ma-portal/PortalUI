@@ -8,8 +8,9 @@ interface Props {
     placeholder?: string;
     style?: any;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
-    onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+    onFocus?: () => void;
+    onBlur?: () => void;
+    onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 interface State {
@@ -18,6 +19,8 @@ interface State {
 
 export default class Input extends React.Component<Props, State> {
 
+    private handle: HTMLInputElement;
+
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -25,9 +28,13 @@ export default class Input extends React.Component<Props, State> {
         };
     }
 
+    resetValue() {
+        this.handle.value = '';
+    }
+
     render() {
         const { initValue, transparent, type, placeholder, spellCheck=false,
-            onChange, onFocus, onBlur } = this.props;
+            onChange, onFocus, onBlur, onKeyPress } = this.props;
         const { focus } = this.state;
         let baseStyle: any = {
             outline: 'none', border: 'none',
@@ -48,6 +55,7 @@ export default class Input extends React.Component<Props, State> {
         }
         return (
             <input value={initValue}
+                ref={(e) => this.handle = e }
                 placeholder={placeholder} 
                 spellCheck={spellCheck}
                 type={type}
@@ -55,7 +63,7 @@ export default class Input extends React.Component<Props, State> {
                 onFocus={
                     (event: React.FocusEvent<HTMLInputElement>) => {
                         if (onFocus) {
-                            onFocus(event);
+                            onFocus();
                         }
                         this.setState({focus: true})
                     }
@@ -63,11 +71,12 @@ export default class Input extends React.Component<Props, State> {
                 onBlur={
                     (event: React.FocusEvent<HTMLInputElement>) => {
                         if (onBlur) {
-                            onBlur(event);
+                            onBlur();
                         }
                         this.setState({focus: false});
                     }
                 }
+                onKeyPress={onKeyPress}
                 style={Object.assign({}, baseStyle, this.props.style)} />
         )
     }
