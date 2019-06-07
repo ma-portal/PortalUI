@@ -1,13 +1,13 @@
 import { LinkedQueue, LinkedNode } from "../datastruct/LinkedQueue";
 
-class EventHandler extends LinkedNode {
+export class EventHandler extends LinkedNode {
     private eventName: string;
     private callback: (data?: any) => void;
 
-    constructor(eventName: string, callback: (data?: any) => void, callOnce: boolean) {
+    constructor(eventName: string, callback: (data?: any) => void, triggerOnce: boolean) {
         super();
         this.eventName = eventName;
-        if (callOnce) {
+        if (triggerOnce) {
             this.callback = (() => {
                 callback();
                 eventService.unsubscribe(this);
@@ -38,8 +38,8 @@ class EventService {
         }
     }
 
-    subscribe(eventName: string, callback: (data?: any) => void, callOnce?: boolean): EventHandler {
-        let handler = new EventHandler(eventName, callback, callOnce);
+    subscribe(eventName: string, callback: (data?: any) => void, triggerOnce?: boolean): EventHandler {
+        let handler = new EventHandler(eventName, callback, triggerOnce);
 
         let chain = this.handlers[eventName];
         if (!chain) {

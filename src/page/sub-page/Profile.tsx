@@ -1,20 +1,20 @@
 import React from "react";
-import { Card, Image, Grid, Tab, List, Label } from "semantic-ui-react";
+import { Card, Image, Grid, Tab, List, Label, Icon, GridRow, GridColumn } from "semantic-ui-react";
 import Axios from "axios";
-import APIs from "../../APIs";
 import format from 'string-template';
-import intl from "../../com/IntlWrapper";
-const randomColor = require('random-color') as any;
 
-interface State {
-    // profile
-}
+import APIs from "../../APIs";
+import intl from "../../com/IntlWrapper";
+import Division from "../../com/Division";
+
+const VIS = require('react-vis') as any;
+const randomColor = require('random-color') as any;
 
 interface Props {
     account: string;
 }
 
-export default class Profile extends React.Component<Props, State> {
+export default class Profile extends React.Component<Props> {
 
     private profile: {[key: string]: any};
 
@@ -100,10 +100,11 @@ export default class Profile extends React.Component<Props, State> {
                         </Card>
                     </Grid.Column>
                     <Grid.Column width={12}>
-                        <Tab panes={[
-                            { menuItem: 'Tab 1', render: () => <Tab.Pane>Tab 1 Content</Tab.Pane> },
-                            { menuItem: 'Tab 2', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> },
-                            { menuItem: 'Tab 3', render: () => <Tab.Pane>Tab 3 Content</Tab.Pane> },
+                        <Tab defaultActiveIndex={1} panes={[
+                            { menuItem: intl.get('Statistics', 'Home.Profile.Tab.Statistics'),
+                                render: () => <Statistics /> },
+                            { menuItem: intl.get('Project', 'Home.Profile.Tab.Project'),
+                                render: () => <Project account={this.props.account} /> },
                         ]} />
                     </Grid.Column>
                 </Grid.Row>
@@ -111,4 +112,99 @@ export default class Profile extends React.Component<Props, State> {
         )
     }
 
+}
+
+// TODO:
+class Statistics extends React.Component {
+
+    render() {
+        return (
+            <Tab.Pane>
+                <VIS.XYPlot
+                    width={300}
+                    height={300}>
+                    <VIS.HorizontalGridLines />
+                    <VIS.LineSeries
+                        data={[
+                        {x: 1, y: 10},
+                        {x: 2, y: 5},
+                        {x: 3, y: 15}
+                        ]}/>
+                    <VIS.XAxis />
+                    <VIS.YAxis />
+                </VIS.XYPlot>
+            </Tab.Pane>
+        );
+    }
+
+}
+
+interface ProjectEntity {
+    name: string;
+    link: string;
+    language: {
+        type: string;
+        color: string;
+    };
+    lastUpdate: string;
+    commit: number;
+    start: number;
+}
+
+class Project extends React.Component<Props> {
+
+    private projects: ProjectEntity[];
+
+    constructor(props: Props) {
+        super(props);
+        this.projects = [];
+    }
+
+    componentDidMount() {
+        Axios.get(APIs.account.project + this.props.account)
+            .then((rep) => {
+                this.projects = rep.data;
+                this.forceUpdate();
+            });
+    }
+
+    render() {
+        return (
+            <Tab.Pane>
+                <List divided relaxed>
+                    { this.projects.map((e, i) =>
+                        <List.Item key={i}>
+                            <List.Content>
+                                <Grid divided='vertically'>
+                                    <GridRow columns={2}>
+                                        <GridColumn>
+                                            <List.Header>
+                                                <Label ribbon color='olive' as='a' href={e.link}>{e.name}</Label>
+                                            </List.Header>
+                                            { e.language &&
+                                                <span className='margin2'>
+                                                    <Icon name='circle thin' style={{color: e.language.color}} />
+                                                    <span>{e.language.type}</span>
+                                                    <Division vertical style={{height: '30%', marginBottom: 0}}/>
+                                                </span>
+                                            }
+                                            <span className='margin2'>{e.lastUpdate}</span>
+                                        </GridColumn>
+                                        <GridColumn style={{
+                                            textAlign: 'right',
+                                            verticalAlign: 'bottom'
+                                        }}>
+                                            <Label>{e.commit} commits</Label>
+                                            <Label><Icon name='star' />{e.start}</Label>
+                                        </GridColumn>
+                                    </GridRow>
+                                </Grid>
+                            </List.Content>
+                        </List.Item>
+                    )}
+                </List>
+            </Tab.Pane>
+        );
+    }
+    
 }

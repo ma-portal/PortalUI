@@ -32,7 +32,7 @@ export default class KBS extends React.Component {
                     marginTop: -150, marginLeft: -250
                 }}>
                     <Dimmer active={true} inverted />
-                    <Image src={require('../../res/KBS-Title.png')} size='medium' />
+                    <Image src={require('../../res/img/KBS-Title.png')} size='medium' />
                     <Input fluid type='text' placeholder='Search...' action>
                         <input />
                         <Select compact options={searchFilter} defaultValue='article' />

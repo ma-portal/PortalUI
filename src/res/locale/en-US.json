@@ -14,15 +14,25 @@
         "IdentifyFailed": "invalid account or password"
     },
     "Home": {
+        "Main": {
+            "News": "News",
+            "StudioProjects": "Studio Projects"
+        },
         "NavigationItems": {
+            "Home": "Home",
             "Chat": "Chat",
             "KBS": "KBS",
             "Profile": "Profile",
             "Settings": "Settings"
         },
         "Profile": {
+            "forNewHere": "Hi, new there! Welcome to Mobile AI Portal! Why don't you press <strong>[CTRL + Q]</strong> to meet something interesting?",
             "ClassOf": "Class {classOf}",
-            "JoinedTime": "Joined in {year}/{month}"
+            "JoinedTime": "Joined in {year}/{month}",
+            "Tab": {
+                "Statistics": "Statistics",
+                "Project": "Project"
+            }
         }
     }
 }

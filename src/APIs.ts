@@ -9,6 +9,7 @@ export default ({
     account: {
         signin: endpoint('account/signin/'),
         avatar: endpoint('account/avatar/'),
-        profile: endpoint('account/profile/')
+        profile: endpoint('account/profile/'),
+        project: endpoint('account/project/'),
     }
 })

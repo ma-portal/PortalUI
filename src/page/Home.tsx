@@ -5,11 +5,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import AcceleratorManager, { CombineKey, KEYS } from '../com/AcceleratorManager';
 import intl from "../com/IntlWrapper";
 
+import eventService from "../com/EventService";
+import Events from "../Events";
 import KBS from "./sub-page/KBS";
 import Profile from "./sub-page/Profile";
+import Chat from "./sub-page/Chat";
+import Main from "./sub-page/Main";
 
 interface Props {
-    newGuyHere?: boolean
+    newGuyHere: boolean
 }
 
 interface State {
@@ -31,12 +35,14 @@ export default class Home extends React.Component<Props, State> {
             new CombineKey(KEYS.Q, false, true));
         // send toast if needed
         if (this.props.newGuyHere || true) {
-            toast(
-                <span>
-                    Hi, new there! Welcome to Mobile AI Portal! Why don't you press <strong>CTRL + Q</strong> to meet something interesting?
-                </span>,
-                { position: toast.POSITION.BOTTOM_LEFT }
-            )
+            eventService.subscribe(Events.LocaleInitDone, () => {
+                toast(
+                    <span dangerouslySetInnerHTML={{
+                        __html: intl.get('', 'Home.Profile.forNewHere')
+                    }} />,
+                    { position: toast.POSITION.BOTTOM_LEFT }
+                );
+            });
         }
     }
 
@@ -65,6 +71,7 @@ export default class Home extends React.Component<Props, State> {
                     style={{
                         borderLeft: '5px solid rgb(50, 150, 205)',
                     }}>
+                    <Menu.Item as='a'>{intl.get('Home', 'Home.NavigationItems.Home')}</Menu.Item>
                     <Menu.Item as='a'>{intl.get('Chat', 'Home.NavigationItems.Chat')}</Menu.Item>
                     <Menu.Item as='a'>{intl.get('KBS', 'Home.NavigationItems.KBS')}</Menu.Item>
                     <Menu.Item as='a'>{intl.get('Profile', 'Home.NavigationItems.Profile')}</Menu.Item>
@@ -78,9 +85,11 @@ export default class Home extends React.Component<Props, State> {
                         padding: 0,
                         width: '100%', height: '100%',
                     }}>
+                        <Main />
                         {/* <KBS /> */}
                         {/* TODO: replace with real account */}
-                        <Profile account='Luncert'/>
+                        {/* <Profile account='Luncert'/> */}
+                        {/* <Chat /> */}
                         <ToastContainer autoClose={8000} />
                     </Segment>
                 </Sidebar.Pusher>

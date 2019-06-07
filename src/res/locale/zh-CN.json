@@ -14,15 +14,25 @@
         "IdentifyFailed": "您的账号或密码有误"
     },
     "Home": {
+        "Main": {
+            "News": "最新资讯",
+            "StudioProjects": "工作室项目"
+        },
         "NavigationItems": {
+            "Home": "主页",
             "Chat": "聊天",
             "KBS": "KBS",
             "Profile": "个人信息",
             "Settings": "设置"
         },
         "Profile": {
+            "forNewHere": "<span>你好啊，新来的！欢迎来到Mobile AI Portal！试试按下<strong>[CTRL + Q]</strong>打开导航呢！</span>",
             "ClassOf": "{classOf}级",
-            "JoinedTime": "加入于{year}年{month}月"
+            "JoinedTime": "加入于{year}年{month}月",
+            "Tab": {
+                "Statistics": "统计",
+                "Project": "项目"
+            }
         }
     }
 }

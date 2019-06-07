@@ -28,8 +28,6 @@ export default class Signin extends React.Component<any, State> {
 
     private account: string;
     private password: string;
-    private accountInput: Input;
-    private passwordInput: Input;
     private bubbleMessage: BubbleMessage;
 
     constructor(props: any) {
@@ -62,8 +60,6 @@ export default class Signin extends React.Component<any, State> {
                     this.forceUpdate();
             }, true);
         }
-        eventService.subscribe(Events.LocaleChange,
-            () => this.forceUpdate());
     }
 
     inputAccount(e: React.ChangeEvent<HTMLInputElement>) {
@@ -158,7 +154,6 @@ export default class Signin extends React.Component<any, State> {
                     }}>Mobile AI Portal</h2>
                     <br/>
                     <Input transparent onChange={this.inputAccount.bind(this)}
-                        ref={(e) => this.accountInput = e}
                         onBlur={() => {
                             if (this.account &&
                                 this.account !== avatar.account &&
@@ -173,7 +168,6 @@ export default class Signin extends React.Component<any, State> {
                             color: 'white'}}
                         />
                     <Input transparent onChange={this.inputPassword.bind(this)} type='password'
-                        ref={(e) => this.passwordInput = e}
                         onFocus={() => this.setState({focusPwInput: true})}
                         onBlur={() => this.setState({focusPwInput: false})}
                         onKeyPress={(e) => {if (e.key === 'Enter') this.signin()}}

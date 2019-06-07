@@ -1,8 +1,24 @@
 import React from 'react';
 import Signin from './page/Signin';
 import Home from './page/Home';
+import eventService, { EventHandler } from './com/EventService';
+import Events from './Events';
 
 export default class App extends React.Component {
+
+    private localeChangeHandler: EventHandler;
+
+    componentDidMount() {
+        // 当locale变化之后刷新整个application
+        this.localeChangeHandler = eventService.subscribe(Events.LocaleChange,
+            () => this.forceUpdate());
+        eventService.subscribe(Events.LocaleInitDone,
+            () => this.forceUpdate(), true);
+    }
+
+    componentWillUnmount() {
+        eventService.unsubscribe(this.localeChangeHandler);
+    }
 
     render() {
         return (
@@ -18,7 +34,7 @@ export default class App extends React.Component {
                     top: 0, left: 0,
                 }} />
                 {/* <Signin /> */}
-                <Home />
+                <Home newGuyHere={true} />
             </div>
         );
     }
