@@ -3,6 +3,8 @@ import { Sidebar, Segment, Menu } from "semantic-ui-react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AcceleratorManager, { CombineKey, KEYS } from '../com/AcceleratorManager';
+import intl from "../com/IntlWrapper";
+
 import KBS from "./sub-page/KBS";
 import Profile from "./sub-page/Profile";
 
@@ -63,9 +65,10 @@ export default class Home extends React.Component<Props, State> {
                     style={{
                         borderLeft: '5px solid rgb(50, 150, 205)',
                     }}>
-                    <Menu.Item as='a'>Home</Menu.Item>
-                    <Menu.Item as='a'>Profile</Menu.Item>
-                    <Menu.Item as='a'>Settings</Menu.Item>
+                    <Menu.Item as='a'>{intl.get('Chat', 'Home.NavigationItems.Chat')}</Menu.Item>
+                    <Menu.Item as='a'>{intl.get('KBS', 'Home.NavigationItems.KBS')}</Menu.Item>
+                    <Menu.Item as='a'>{intl.get('Profile', 'Home.NavigationItems.Profile')}</Menu.Item>
+                    <Menu.Item as='a'>{intl.get('Settings', 'Home.NavigationItems.Settings')}</Menu.Item>
                 </Sidebar>
                 <Sidebar.Pusher dimmed={false} style={{
                     width: '100%', height: '100%',
@@ -76,7 +79,8 @@ export default class Home extends React.Component<Props, State> {
                         width: '100%', height: '100%',
                     }}>
                         {/* <KBS /> */}
-                        <Profile />
+                        {/* TODO: replace with real account */}
+                        <Profile account='Luncert'/>
                         <ToastContainer autoClose={8000} />
                     </Segment>
                 </Sidebar.Pusher>

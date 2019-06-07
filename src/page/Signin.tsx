@@ -3,7 +3,7 @@ import { Image } from 'semantic-ui-react';
 import Typed from 'typed.js';
 import {Motion, spring} from 'react-motion';
 import Events from '../Events';
-import axios from 'axios';
+import Axios from 'axios';
 
 import intl from '../com/IntlWrapper';
 
@@ -11,6 +11,7 @@ import Input from '../com/Input';
 import Waiting from '../com/Waiting';
 import eventService from '../com/EventService';
 import APIs from '../APIs';
+import BubbleMessage from '../com/BubbleMessage';
 
 interface State {
     justSignin: boolean;
@@ -29,6 +30,7 @@ export default class Signin extends React.Component<any, State> {
     private password: string;
     private accountInput: Input;
     private passwordInput: Input;
+    private bubbleMessage: BubbleMessage;
 
     constructor(props: any) {
         super(props);
@@ -41,6 +43,7 @@ export default class Signin extends React.Component<any, State> {
                 url: ''
             }
         };
+        this.bubbleMessage = new BubbleMessage();
     }
 
     componentDidMount() {
@@ -48,7 +51,7 @@ export default class Signin extends React.Component<any, State> {
             eventService.subscribe(Events.LocaleInitDone,
                 () => {
                     new Typed('#quotes', {
-                        strings: intl.get([], 'Signin', 'Quotes'),
+                        strings: intl.get([], 'Signin.Quotes'),
                         typeSpeed: 50,
                         backSpeed: 0,
                         backDelay: 3000,
@@ -75,18 +78,21 @@ export default class Signin extends React.Component<any, State> {
         // 值校验
         if (!this.account || !this.valueCheck(this.account)
             || !this.password || !this.valueCheck(this.password)) {
-
+            this.bubbleMessage.message(
+                intl.get('incorrect account or password', 'Signin.IdentifyFailed'))
         } else {
             // 发起验证请求
             let credential = this.account + ':' + this.password;
-            axios.get(APIs.account.signin + credential)
+            this.setState({waiting: true});
+            Axios.get(APIs.account.signin + credential)
                 .then((rep) => {
                     if (rep.data.identified) {
                         this.setState({justSignin: true});
                     } else {
-                        // TODO: handle signin error
+                        intl.get('incorrect account or password', 'Signin.IdentifyFailed');
                     }
-                });
+                })
+                .finally(() =>  this.setState({waiting: false}));
         }
     }
 
@@ -109,7 +115,7 @@ export default class Signin extends React.Component<any, State> {
     }
 
     loadAvatar() {
-        axios.get(APIs.account.avatar + this.account)
+        Axios.get(APIs.account.avatar + this.account)
             .then((rep) => {
                 this.setState({
                     avatar: {
@@ -125,12 +131,11 @@ export default class Signin extends React.Component<any, State> {
         const { justSignin, waiting, focusPwInput, avatar } = this.state;
 
         let signinBarContent = ([
-                <Image key='avatar' src={avatar.url || require('../res/img/avatar.png')}
+                <Image key='avatar' src={avatar.url || require('../res/img/default-avatar.png')}
                     circular size='small' style={{
                     position: 'absolute',
                     right: 330, top: 0,
                     transform: 'scale(0.8)',
-                    mixBlendMode: avatar.url ? '' : 'exclusion'
                 }}/>,
                 <div key='input-group' style={{
                     width: 350, height: '100%',
@@ -138,6 +143,7 @@ export default class Signin extends React.Component<any, State> {
                     position: 'absolute',
                     top: 0, right: 0
                 }}>
+                    {this.bubbleMessage.render()}
                     <Image src={require('../res/img/logo.png')} size='mini' style={{
                         display: 'inline-block',
                         position: 'relative',
@@ -160,7 +166,8 @@ export default class Signin extends React.Component<any, State> {
                                 this.loadAvatar();
                             }
                         }
-                        placeholder={intl.get('Account', 'Signin', 'AccountInputPlaceholder')}
+                        onKeyPress={(e) => {if (e.key === 'Enter') this.signin()}}
+                        placeholder={intl.get('Account', 'Signin.AccountInputPlaceholder')}
                         style={{
                             textAlign: 'center',
                             color: 'white'}}
@@ -169,12 +176,8 @@ export default class Signin extends React.Component<any, State> {
                         ref={(e) => this.passwordInput = e}
                         onFocus={() => this.setState({focusPwInput: true})}
                         onBlur={() => this.setState({focusPwInput: false})}
-                        onKeyPress={(e) => {
-                            if (e.key === 'Enter') {
-                                this.signin();
-                            }
-                        }}
-                        placeholder={ intl.get('Password', 'Signin',
+                        onKeyPress={(e) => {if (e.key === 'Enter') this.signin()}}
+                        placeholder={ intl.get('Password', 'Signin.' + 
                             !focusPwInput ? 'PasswordInputPlaceholder1' : 'PasswordInputPlaceholder2') }
                         style={{
                             textAlign: 'center',

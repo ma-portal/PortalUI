@@ -1,9 +1,55 @@
 import React from "react";
-import { Card, Icon, Image, Grid, Tab, List, Label } from "semantic-ui-react";
+import { Card, Image, Grid, Tab, List, Label } from "semantic-ui-react";
+import Axios from "axios";
+import APIs from "../../APIs";
+import format from 'string-template';
+import intl from "../../com/IntlWrapper";
+const randomColor = require('random-color') as any;
 
-export default class Profile extends React.Component {
+interface State {
+    // profile
+}
+
+interface Props {
+    account: string;
+}
+
+export default class Profile extends React.Component<Props, State> {
+
+    private profile: {[key: string]: any};
+
+    constructor(props: Props) {
+        super(props);
+        this.profile = {
+            account: '',
+            realName: '',
+            classOf: 0,
+            joinedTime: {
+                year: 0,
+                month: 0,
+            },
+            desc: '',
+            tags: [],
+            email: '',
+            qq: '',
+            phone: '',
+            avatar: ''
+        };
+    }
+
+    componentDidMount() {
+        Axios.get(APIs.account.profile + this.props.account)
+            .then((rep) => {
+                for (let key of Object.keys(rep.data)) {
+                    this.profile[key] = rep.data[key];
+                }
+                this.forceUpdate();
+            });
+    }
     
     render() {
+        const { account, realName, classOf, joinedTime, desc, tags, email, qq, phone, avatar } = this.profile;
+        const { year, month } = joinedTime;
         return (
             <Grid style={{
                 width: '70%', height: '100%',
@@ -12,38 +58,41 @@ export default class Profile extends React.Component {
                 <Grid.Row columns={2}>
                     <Grid.Column width={4}>
                         <Card>
-                            <Image src='https://react.semantic-ui.com/images/avatar/large/matthew.png' wrapped ui={false} />
+                            <Image src={avatar || require('../../res/img/default-avatar.png')} wrapped ui={false} />
                             <Card.Content>
-                                <Card.Header>Matthew</Card.Header>
+                                <Card.Header>{account}</Card.Header>
                                 <Card.Meta>
-                                    <span>Class 2016</span>
-                                    <span>Joined in 2015</span>
+                                    <strong>{realName}</strong>
+                                    <span>{format(intl.get('Class {classOf}', 'Home.Profile.ClassOf'), { classOf })}</span>
+                                    <span>{format(intl.get('Joined in {year}/{month}', 'Home.Profile.JoinedTime'), { year, month })}</span>
                                 </Card.Meta>
-                                <Card.Description>
-                                    Matthew is a musician living in Nashville.
-                                </Card.Description>
-                                <Label color='green'>Gita</Label>
-                                <Label color='blue'>LOL</Label>
-                                <Label color='red'>Java</Label>
+                                { (tags as string[]).map((tag, index) =>
+                                    <Label key={index} style={{
+                                        backgroundColor: randomColor().rgbString(),
+                                        margin: 2
+                                         }}>
+                                        {tag}
+                                    </Label>) }
+                                <Card.Description>{desc}</Card.Description>
                             </Card.Content>
                             <Card.Content extra>
                                 <List>
                                     <List.Item>
                                         <List.Icon name='mail' />
                                         <List.Content>
-                                            <a href='mailto:jack@semantic-ui.com'>jack@semantic-ui.com</a>
+                                            <a href='mailto:jack@semantic-ui.com'>{email}</a>
                                         </List.Content>
                                     </List.Item>
                                     <List.Item>
                                         <List.Icon name='qq' />
                                         <List.Content>
-                                            <span>2725115515</span>
+                                            <span>{qq}</span>
                                         </List.Content>
                                     </List.Item>
                                     <List.Item>
                                         <List.Icon name='phone' />
                                         <List.Content>
-                                            <span>18381196466</span>
+                                            <span>{phone}</span>
                                         </List.Content>
                                     </List.Item>
                                 </List>

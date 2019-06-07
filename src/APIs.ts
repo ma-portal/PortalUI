@@ -8,6 +8,7 @@ function endpoint(path: string) {
 export default ({
     account: {
         signin: endpoint('account/signin/'),
-        avatar: endpoint('account/avatar/')
+        avatar: endpoint('account/avatar/'),
+        profile: endpoint('account/profile/')
     }
 })

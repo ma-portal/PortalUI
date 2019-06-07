@@ -10,6 +10,19 @@
             "Being busy does not always mean real work. The object of all work is production or accomplishment and to either of these ends there must be forethought, system, planning, intelligence, and honest purpose, as well as perspiration. Seeming to do is not doing.",
             "I know that I am intelligent, because I know that I know nothing.",
             "People who fail to use their emotional intelligence skills are more likely to turn to other, less effective means of managing their mood. They are twice as likely to experience anxiety, depression, substance abuse, and even thoughts of suicide."
-        ]
+        ],
+        "IdentifyFailed": "invalid account or password"
+    },
+    "Home": {
+        "NavigationItems": {
+            "Chat": "Chat",
+            "KBS": "KBS",
+            "Profile": "Profile",
+            "Settings": "Settings"
+        },
+        "Profile": {
+            "ClassOf": "Class {classOf}",
+            "JoinedTime": "Joined in {year}/{month}"
+        }
     }
 }

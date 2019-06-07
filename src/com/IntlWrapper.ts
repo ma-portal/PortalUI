@@ -30,8 +30,9 @@ class IntlWrapper {
         return intl.init(options);
     }
 
-    get<T>(defaultValue: T, ...keys:string[]): T {
-        if (keys.length > 0 && this.initDone) {
+    get<T>(defaultValue: T, key: string): T {
+        if (key && this.initDone) {
+            let keys = key.split('.');
             let v = this.cache[keys[0]];
             if (!v) {
                 v = intl.get(keys[0]) as any;
