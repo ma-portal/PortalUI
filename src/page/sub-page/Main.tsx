@@ -2,13 +2,44 @@ import React from "react";
 import { Grid, Segment, Pagination, List, Label, Statistic } from "semantic-ui-react";
 import { Motion, spring } from "react-motion";
 import intl from "../../com/IntlWrapper";
+import Waiting from "../../com/Waiting";
+import eventService from "../../com/EventService";
+import Events from "../../Events";
+import Input from "../../com/Input";
 
+interface State {
+    focusSearchInput: boolean;
+}
 
+export default class Main extends React.Component<any, State> {
 
-export default class Main extends React.Component {
+    private searchKey: string;
+
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            focusSearchInput: false
+        };
+    }
+    
+
+    componentDidMount() {
+        eventService.subscribe(Events.LocaleInitDone,
+            () => this.forceUpdate(), true);
+    }
+
+    inputSearch(e: React.ChangeEvent<HTMLInputElement>) {
+        this.searchKey = e.target.value;
+    }
+
+    search() {
+        alert('searching: ' + this.searchKey);
+    }
 
     render() {
+        const { focusSearchInput } = this.state;
         return (
+            // adjust the width according to device type
             <Grid style={{
                 width: '70%', height: '100%',
                 margin: '0px auto'
@@ -17,8 +48,8 @@ export default class Main extends React.Component {
                     <Grid.Column width={12}>
                         <Motion defaultStyle={{opacity: 1, left1: 0, left2: 100}}
                             style={{
-                                opacity: spring(0),
-                                left1: spring(-100),
+                                opacity: spring(0.7),
+                                left1: spring(0),
                                 left2: spring(0)
                             }}>
                             { value =>
@@ -26,7 +57,9 @@ export default class Main extends React.Component {
                                     position: 'relative',
                                     overflow: 'hidden',
                                     textAlign: 'center',
-                                    width: '100%', height: 400,
+                                    width: '100%', height: '40%',
+                                    borderRadius: 5,
+                                    boxShadow: '0px 0px 3px gray'
                                 }}>
                                     <div style={{
                                         position: 'absolute',
@@ -34,6 +67,7 @@ export default class Main extends React.Component {
                                         backgroundImage: 'url(' + require('../../res/img/backimg.jpg') + ')',
                                         backgroundSize: 'cover',
                                         left: value.left1 + '%',
+                                        bottom: 0,
                                         opacity: value.opacity
                                     }} />
                                     <div style={{
@@ -41,7 +75,7 @@ export default class Main extends React.Component {
                                         width: '100%', height: '100%',
                                         backgroundImage: 'url(' + require('../../res/img/backimg.jpg') + ')',
                                         backgroundSize: 'cover',
-                                        left: value.left2 + '%'
+                                        left: value.left2 + '%',
                                     }} />
                                     <Pagination inverted pointing secondary
                                         defaultActivePage={1} totalPages={3}
@@ -58,6 +92,14 @@ export default class Main extends React.Component {
                             <Label color='orange' ribbon>
                                 {intl.get('News', 'Home.Main.News')}
                             </Label>
+                            <Input transparent onChange={this.inputSearch.bind(this)}
+                                onFocus={() => this.setState({focusSearchInput: true})}
+                                onBlur={() => this.setState({focusSearchInput: false})}
+                                onKeyPress={(e) => {if (e.key === 'Enter') this.search()}}
+                                placeholder={ intl.get('Search1', 'Home.Main.' + 
+                                    (!focusSearchInput ? 'SearchPlaceholder1' : 'SearchPlaceholder2')) }
+                                style={{float: 'right'}} />
+                            <Waiting />
                             <List divided relaxed>
                                 {/* { this.projects.map((e, i) =>
                                     <List.Item key={i}>
@@ -77,14 +119,22 @@ export default class Main extends React.Component {
                     <Grid.Column width={4}>
                         <Segment>
                             {/* TODO: change the color depending on the value */}
-                            <Statistic color='green'>
-                                <Statistic.Value>25</Statistic.Value>
-                                <Statistic.Label>Weekly Commits</Statistic.Label>
-                            </Statistic>
-                            <Statistic color='blue'>
-                                <Statistic.Value>2</Statistic.Value>
-                                <Statistic.Label>Active Projects</Statistic.Label>
-                            </Statistic>
+                            <Grid>
+                                <Grid.Row columns={2}>
+                                    <Grid.Column style={{textAlign: 'center'}}>
+                                        <Statistic color='green'>
+                                            <Statistic.Value>25</Statistic.Value>
+                                            <Statistic.Label>{intl.get('Weekly Commits', 'Home.Main.WeeklyCommits')}</Statistic.Label>
+                                        </Statistic>
+                                    </Grid.Column>
+                                    <Grid.Column style={{textAlign: 'center'}}>
+                                        <Statistic color='blue'>
+                                            <Statistic.Value>2</Statistic.Value>
+                                            <Statistic.Label>{intl.get('Active Projects', 'Home.Main.ActiveProjects')}</Statistic.Label>
+                                        </Statistic>
+                                    </Grid.Column>
+                                </Grid.Row>
+                            </Grid>
                         </Segment>
                         <Segment>
                             <Label color='olive' attached='top'>

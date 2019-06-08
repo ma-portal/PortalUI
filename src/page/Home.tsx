@@ -34,15 +34,18 @@ export default class Home extends React.Component<Props, State> {
         AcceleratorManager.register(() => this.toggleSideBar(),
             new CombineKey(KEYS.Q, false, true));
         // send toast if needed
-        if (this.props.newGuyHere || true) {
-            eventService.subscribe(Events.LocaleInitDone, () => {
-                toast(
-                    <span dangerouslySetInnerHTML={{
-                        __html: intl.get('', 'Home.Profile.forNewHere')
-                    }} />,
-                    { position: toast.POSITION.BOTTOM_LEFT }
-                );
-            });
+        if (this.props.newGuyHere) {
+            let notify = () => toast(
+                <span dangerouslySetInnerHTML={{
+                    __html: intl.get('', 'Home.Profile.forNewHere')
+                }} />,
+                { position: toast.POSITION.BOTTOM_LEFT }
+            );
+            if (intl.initialized()) {
+                notify();
+            } else {
+                eventService.subscribe(Events.LocaleInitDone, notify, true);
+            }
         }
     }
 
@@ -72,8 +75,8 @@ export default class Home extends React.Component<Props, State> {
                         borderLeft: '5px solid rgb(50, 150, 205)',
                     }}>
                     <Menu.Item as='a'>{intl.get('Home', 'Home.NavigationItems.Home')}</Menu.Item>
-                    <Menu.Item as='a'>{intl.get('Chat', 'Home.NavigationItems.Chat')}</Menu.Item>
                     <Menu.Item as='a'>{intl.get('KBS', 'Home.NavigationItems.KBS')}</Menu.Item>
+                    <Menu.Item as='a'>{intl.get('Chat', 'Home.NavigationItems.Chat')}</Menu.Item>
                     <Menu.Item as='a'>{intl.get('Profile', 'Home.NavigationItems.Profile')}</Menu.Item>
                     <Menu.Item as='a'>{intl.get('Settings', 'Home.NavigationItems.Settings')}</Menu.Item>
                 </Sidebar>
@@ -85,11 +88,11 @@ export default class Home extends React.Component<Props, State> {
                         padding: 0,
                         width: '100%', height: '100%',
                     }}>
-                        <Main />
+                        {/* <Main /> */}
                         {/* <KBS /> */}
+                        <Chat />
                         {/* TODO: replace with real account */}
                         {/* <Profile account='Luncert'/> */}
-                        {/* <Chat /> */}
                         <ToastContainer autoClose={8000} />
                     </Segment>
                 </Sidebar.Pusher>

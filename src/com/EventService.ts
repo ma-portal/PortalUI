@@ -1,24 +1,25 @@
 import { LinkedQueue, LinkedNode } from "../datastruct/LinkedQueue";
+import format from 'string-template';
 
 export class EventHandler extends LinkedNode {
     private eventName: string;
     private callback: (data?: any) => void;
+    private triggerOnce: boolean;
 
     constructor(eventName: string, callback: (data?: any) => void, triggerOnce: boolean) {
         super();
         this.eventName = eventName;
-        if (triggerOnce) {
-            this.callback = (() => {
-                callback();
-                eventService.unsubscribe(this);
-            });
-        } else {
-            this.callback = callback;
-        }
+        this.triggerOnce = triggerOnce;
+        this.callback = callback;
     }
 
     public getEventName(): string { return this.eventName; }
     public getCallback(): Function { return this.callback; }
+    public isTriggerOnce(): boolean { return this.triggerOnce; }
+    public toString(): string {
+        return format('EventHandler[eventName: {0}, triggerOnce: {1}]',
+            { 0: this.eventName, 1: this.triggerOnce })
+    }
 
 }
 
@@ -33,20 +34,25 @@ class EventService {
     publish(eventName: string, data?: any) {
         let chain = this.handlers[eventName];
         if (chain) {
-            chain.forEach(
-                (handler) => handler.getCallback()(data));
+            let unsubscribeNeeded: EventHandler[] = [];
+            chain.forEach((handler) => {
+                handler.getCallback()(data);
+                if (handler.isTriggerOnce()) {
+                    unsubscribeNeeded.push(handler);
+                }
+            });
+            unsubscribeNeeded.forEach((handler) => eventService.unsubscribe(handler));
         }
     }
 
     subscribe(eventName: string, callback: (data?: any) => void, triggerOnce?: boolean): EventHandler {
-        let handler = new EventHandler(eventName, callback, triggerOnce);
+        let handler = new EventHandler(eventName, callback, triggerOnce || false);
 
         let chain = this.handlers[eventName];
         if (!chain) {
             chain = this.handlers[eventName] = new LinkedQueue<EventHandler>();
         }
         chain.enQueue(handler);
-
         return handler;
     }
 
@@ -56,6 +62,7 @@ class EventService {
             chain.delete(handler.getIndex());
             return true;
         }
+        // chain.printQueue();
         return false;
     }
 

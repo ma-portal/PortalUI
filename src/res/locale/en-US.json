@@ -16,12 +16,16 @@
     "Home": {
         "Main": {
             "News": "News",
-            "StudioProjects": "Studio Projects"
+            "StudioProjects": "Studio Projects",
+            "WeeklyCommits": "Weekly Commits",
+            "ActiveProjects": "Active Projects",
+            "SearchPlaceholder1": "Search ...",
+            "SearchPlaceholder2": "Press ENTER to finish input"
         },
         "NavigationItems": {
             "Home": "Home",
-            "Chat": "Chat",
             "KBS": "KBS",
+            "Chat": "Chat",
             "Profile": "Profile",
             "Settings": "Settings"
         },

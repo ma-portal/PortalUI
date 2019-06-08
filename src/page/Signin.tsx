@@ -172,7 +172,7 @@ export default class Signin extends React.Component<any, State> {
                         onBlur={() => this.setState({focusPwInput: false})}
                         onKeyPress={(e) => {if (e.key === 'Enter') this.signin()}}
                         placeholder={ intl.get('Password', 'Signin.' + 
-                            !focusPwInput ? 'PasswordInputPlaceholder1' : 'PasswordInputPlaceholder2') }
+                            (!focusPwInput ? 'PasswordInputPlaceholder1' : 'PasswordInputPlaceholder2')) }
                         style={{
                             textAlign: 'center',
                             color: 'white'}}

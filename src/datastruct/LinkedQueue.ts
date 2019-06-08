@@ -144,7 +144,10 @@ class LinkedQueue<T extends LinkedNode> {
     }
 
     public printQueue() {
-        this.forEach((node) => console.log(node.toString()));
+        let s = 'LinkedQueue[';
+        this.forEach((node) => s += node.toString());
+        s += ']'
+        console.log(s);
     }
 
 }

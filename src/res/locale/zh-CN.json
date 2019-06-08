@@ -16,12 +16,16 @@
     "Home": {
         "Main": {
             "News": "最新资讯",
-            "StudioProjects": "工作室项目"
+            "StudioProjects": "工作室项目",
+            "WeeklyCommits": "本周Github提交",
+            "ActiveProjects": "本周活跃项目",
+            "SearchPlaceholder1": "搜索 ...",
+            "SearchPlaceholder2": "按下回车结束输入"
         },
         "NavigationItems": {
             "Home": "主页",
-            "Chat": "聊天",
             "KBS": "KBS",
+            "Chat": "聊天",
             "Profile": "个人信息",
             "Settings": "设置"
         },
