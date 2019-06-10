@@ -10,7 +10,7 @@ const locales = {
 
 const defaultLocale = 'zh-CN';
 
-class IntlWrapper {
+class Intl {
 
     private cache: { [key: string]: any };
     private initDone: boolean;
@@ -49,4 +49,4 @@ class IntlWrapper {
 
 }
 
-export default new IntlWrapper();
+export default new Intl();

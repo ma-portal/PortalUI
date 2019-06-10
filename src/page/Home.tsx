@@ -3,7 +3,7 @@ import { Sidebar, Segment, Menu } from "semantic-ui-react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AcceleratorManager, { CombineKey, KEYS } from '../com/AcceleratorManager';
-import intl from "../com/IntlWrapper";
+import Intl from "../com/Intl";
 
 import eventService from "../com/EventService";
 import Events from "../Events";
@@ -11,6 +11,8 @@ import KBS from "./sub-page/KBS";
 import Profile from "./sub-page/Profile";
 import Chat from "./sub-page/Chat";
 import Main from "./sub-page/Main";
+import Choose from "../com/Choose";
+import Settings from "./sub-page/Settings";
 
 interface Props {
     newGuyHere: boolean
@@ -18,6 +20,7 @@ interface Props {
 
 interface State {
     sideBarVisible: boolean;
+    activePage: number;
 }
 
 export default class Home extends React.Component<Props, State> {
@@ -25,23 +28,24 @@ export default class Home extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            sideBarVisible: false
-        }
+            sideBarVisible: false,
+            activePage: 2
+        };
     }
 
     componentDidMount() {
-        // bind accelerator
+        // 绑定快捷键
         AcceleratorManager.register(() => this.toggleSideBar(),
             new CombineKey(KEYS.Q, false, true));
         // send toast if needed
         if (this.props.newGuyHere) {
             let notify = () => toast(
                 <span dangerouslySetInnerHTML={{
-                    __html: intl.get('', 'Home.Profile.forNewHere')
+                    __html: Intl.get('', 'Home.Profile.forNewHere')
                 }} />,
                 { position: toast.POSITION.BOTTOM_LEFT }
             );
-            if (intl.initialized()) {
+            if (Intl.initialized()) {
                 notify();
             } else {
                 eventService.subscribe(Events.LocaleInitDone, notify, true);
@@ -55,7 +59,10 @@ export default class Home extends React.Component<Props, State> {
     }
 
     render() {
-        const { sideBarVisible } = this.state;
+        const { sideBarVisible, activePage } = this.state;
+        const createClickHandler = (i: number) => {
+            return () => this.setState({activePage: i});
+        }
         return (
             <Sidebar.Pushable as={Segment} style={{
                 width: '100%', height: '100%',
@@ -71,14 +78,13 @@ export default class Home extends React.Component<Props, State> {
                     vertical
                     visible={sideBarVisible}
                     width='thin'
-                    style={{
-                        borderLeft: '5px solid rgb(50, 150, 205)',
-                    }}>
-                    <Menu.Item as='a'>{intl.get('Home', 'Home.NavigationItems.Home')}</Menu.Item>
-                    <Menu.Item as='a'>{intl.get('KBS', 'Home.NavigationItems.KBS')}</Menu.Item>
-                    <Menu.Item as='a'>{intl.get('Chat', 'Home.NavigationItems.Chat')}</Menu.Item>
-                    <Menu.Item as='a'>{intl.get('Profile', 'Home.NavigationItems.Profile')}</Menu.Item>
-                    <Menu.Item as='a'>{intl.get('Settings', 'Home.NavigationItems.Settings')}</Menu.Item>
+                    style={{ borderLeft: '5px solid rgb(50, 150, 205)' }}>
+                    { [ 'Main', 'KBS', 'Chat', 'Profile', 'Settings' ].map(
+                        (v, i) => 
+                            <Menu.Item key={v} as='a' onClick={createClickHandler(i)}>
+                                {Intl.get(v, 'Home.NavigationItems.' + v)}
+                            </Menu.Item>
+                    ) }
                 </Sidebar>
                 <Sidebar.Pusher dimmed={false} style={{
                     width: '100%', height: '100%',
@@ -88,11 +94,15 @@ export default class Home extends React.Component<Props, State> {
                         padding: 0,
                         width: '100%', height: '100%',
                     }}>
-                        {/* <Main /> */}
-                        {/* <KBS /> */}
-                        <Chat />
-                        {/* TODO: replace with real account */}
-                        {/* <Profile account='Luncert'/> */}
+                        <Choose activeItem={activePage}
+                            items={[
+                                <Main />,
+                                <KBS />,
+                                <Chat />,
+                                // TODO: replace with real account
+                                <Profile account='Luncert' />,
+                                <Settings />
+                            ]} />
                         <ToastContainer autoClose={8000} />
                     </Segment>
                 </Sidebar.Pusher>

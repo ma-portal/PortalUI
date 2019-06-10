@@ -4,7 +4,7 @@ import Axios from "axios";
 import format from 'string-template';
 
 import APIs from "../../APIs";
-import intl from "../../com/IntlWrapper";
+import intl from "../../com/Intl";
 import Division from "../../com/Division";
 
 const VIS = require('react-vis') as any;

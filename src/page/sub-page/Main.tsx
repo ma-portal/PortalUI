@@ -1,10 +1,8 @@
 import React from "react";
 import { Grid, Segment, Pagination, List, Label, Statistic } from "semantic-ui-react";
 import { Motion, spring } from "react-motion";
-import intl from "../../com/IntlWrapper";
+import Intl from "../../com/Intl";
 import Waiting from "../../com/Waiting";
-import eventService from "../../com/EventService";
-import Events from "../../Events";
 import Input from "../../com/Input";
 
 interface State {
@@ -20,12 +18,6 @@ export default class Main extends React.Component<any, State> {
         this.state = {
             focusSearchInput: false
         };
-    }
-    
-
-    componentDidMount() {
-        eventService.subscribe(Events.LocaleInitDone,
-            () => this.forceUpdate(), true);
     }
 
     inputSearch(e: React.ChangeEvent<HTMLInputElement>) {
@@ -90,13 +82,13 @@ export default class Main extends React.Component<any, State> {
                         </Motion>
                         <Segment>
                             <Label color='orange' ribbon>
-                                {intl.get('News', 'Home.Main.News')}
+                                {Intl.get('News', 'Home.Main.News')}
                             </Label>
                             <Input transparent onChange={this.inputSearch.bind(this)}
                                 onFocus={() => this.setState({focusSearchInput: true})}
                                 onBlur={() => this.setState({focusSearchInput: false})}
                                 onKeyPress={(e) => {if (e.key === 'Enter') this.search()}}
-                                placeholder={ intl.get('Search1', 'Home.Main.' + 
+                                placeholder={ Intl.get('Search1', 'Home.Main.' + 
                                     (!focusSearchInput ? 'SearchPlaceholder1' : 'SearchPlaceholder2')) }
                                 style={{float: 'right'}} />
                             <Waiting />
@@ -124,13 +116,13 @@ export default class Main extends React.Component<any, State> {
                                     <Grid.Column style={{textAlign: 'center'}}>
                                         <Statistic color='green'>
                                             <Statistic.Value>25</Statistic.Value>
-                                            <Statistic.Label>{intl.get('Weekly Commits', 'Home.Main.WeeklyCommits')}</Statistic.Label>
+                                            <Statistic.Label>{Intl.get('Weekly Commits', 'Home.Main.WeeklyCommits')}</Statistic.Label>
                                         </Statistic>
                                     </Grid.Column>
                                     <Grid.Column style={{textAlign: 'center'}}>
                                         <Statistic color='blue'>
                                             <Statistic.Value>2</Statistic.Value>
-                                            <Statistic.Label>{intl.get('Active Projects', 'Home.Main.ActiveProjects')}</Statistic.Label>
+                                            <Statistic.Label>{Intl.get('Active Projects', 'Home.Main.ActiveProjects')}</Statistic.Label>
                                         </Statistic>
                                     </Grid.Column>
                                 </Grid.Row>
@@ -138,7 +130,7 @@ export default class Main extends React.Component<any, State> {
                         </Segment>
                         <Segment>
                             <Label color='olive' attached='top'>
-                                {intl.get('Studio Projects', 'Home.Main.StudioProjects')}
+                                {Intl.get('Studio Projects', 'Home.Main.StudioProjects')}
                             </Label>
                             <List divided relaxed>
                                 <List.Item key={0}>

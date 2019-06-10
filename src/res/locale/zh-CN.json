@@ -19,11 +19,18 @@
             "StudioProjects": "工作室项目",
             "WeeklyCommits": "本周Github提交",
             "ActiveProjects": "本周活跃项目",
-            "SearchPlaceholder1": "搜索 ...",
+            "SearchPlaceholder1": "搜索",
             "SearchPlaceholder2": "按下回车结束输入"
         },
+        "KBS": {
+            "notSupported": "糟糕！因为脱发而无心工作的程序猿还没有把这个功能做出来:P。试试其他功能吧！"
+        },
+        "Chat": {
+            "SearchInputPlaceholder1": "搜索",
+            "SearchInputPlaceholder2": "按下回车结束输入"
+        },
         "NavigationItems": {
-            "Home": "主页",
+            "Main": "主页",
             "KBS": "KBS",
             "Chat": "聊天",
             "Profile": "个人信息",

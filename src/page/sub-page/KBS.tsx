@@ -1,6 +1,9 @@
 import React from "react";
 import { Input, Select, Button, Icon, Image, Dimmer } from "semantic-ui-react";
 import { toast } from "react-toastify";
+import Intl from "../../com/Intl";
+import eventService from "../../com/EventService";
+import Events from "../../Events";
 
 const searchFilter = [
     { key: 'article', text: 'Article', value: 'article' },
@@ -10,13 +13,17 @@ const searchFilter = [
 export default class KBS extends React.Component {
 
     componentDidMount() {
-        toast.warn(
-            <span>
-                Unfortunately, this function is under developing <Icon name='smile outline' />. Press <strong>CTRL + Q</strong> to try other funtions.
-            </span>, {
-            autoClose: false,
-            position: toast.POSITION.BOTTOM_LEFT
-        })
+        let notify = () => toast.warn(
+            <span dangerouslySetInnerHTML={{
+                __html: Intl.get('', 'Home.KBS.notSupported')
+            }} />,
+            { autoClose: false, position: toast.POSITION.BOTTOM_LEFT }
+        );
+        if (Intl.initialized()) {
+            notify();
+        } else {
+            eventService.subscribe(Events.LocaleInitDone, notify, true);
+        }
     }
 
     render() {

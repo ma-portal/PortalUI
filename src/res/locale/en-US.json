@@ -19,11 +19,18 @@
             "StudioProjects": "Studio Projects",
             "WeeklyCommits": "Weekly Commits",
             "ActiveProjects": "Active Projects",
-            "SearchPlaceholder1": "Search ...",
+            "SearchPlaceholder1": "Search",
             "SearchPlaceholder2": "Press ENTER to finish input"
         },
+        "KBS": {
+            "notSupported": "Unfortunately, this function is under developing :P. Press <strong>CTRL + Q</strong> to try other funtions."
+        },
+        "Chat": {
+            "SearchInputPlaceholder1": "Search",
+            "SearchInputPlaceholder2": "Press ENTER to finish input"
+        },
         "NavigationItems": {
-            "Home": "Home",
+            "Main": "Home",
             "KBS": "KBS",
             "Chat": "Chat",
             "Profile": "Profile",
