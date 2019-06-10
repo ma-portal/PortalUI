@@ -49,7 +49,7 @@ export default class Signin extends React.Component<any, State> {
             eventService.subscribe(Events.LocaleInitDone,
                 () => {
                     new Typed('#quotes', {
-                        strings: Intl.get([], 'Signin.Quotes'),
+                        strings: Intl.get('Signin.Quotes'),
                         typeSpeed: 50,
                         backSpeed: 0,
                         backDelay: 3000,
@@ -75,7 +75,7 @@ export default class Signin extends React.Component<any, State> {
         if (!this.account || !this.valueCheck(this.account)
             || !this.password || !this.valueCheck(this.password)) {
             this.bubbleMessage.message(
-                Intl.get('incorrect account or password', 'Signin.IdentifyFailed'))
+                Intl.get('Signin.IdentifyFailed'))
         } else {
             // 发起验证请求
             let credential = this.account + ':' + this.password;
@@ -85,7 +85,7 @@ export default class Signin extends React.Component<any, State> {
                     if (rep.data.identified) {
                         this.setState({justSignin: true});
                     } else {
-                        Intl.get('incorrect account or password', 'Signin.IdentifyFailed');
+                        Intl.get('Signin.IdentifyFailed');
                     }
                 })
                 .finally(() =>  this.setState({waiting: false}));
@@ -162,7 +162,7 @@ export default class Signin extends React.Component<any, State> {
                             }
                         }
                         onKeyPress={(e) => {if (e.key === 'Enter') this.signin()}}
-                        placeholder={Intl.get('Account', 'Signin.AccountInputPlaceholder')}
+                        placeholder={Intl.get('Signin.AccountInputPlaceholder')}
                         style={{
                             textAlign: 'center',
                             color: 'white'}}
@@ -171,7 +171,7 @@ export default class Signin extends React.Component<any, State> {
                         onFocus={() => this.setState({focusPwInput: true})}
                         onBlur={() => this.setState({focusPwInput: false})}
                         onKeyPress={(e) => {if (e.key === 'Enter') this.signin()}}
-                        placeholder={ Intl.get('Password', 'Signin.' + 
+                        placeholder={ Intl.get('Signin.' + 
                             (!focusPwInput ? 'PasswordInputPlaceholder1' : 'PasswordInputPlaceholder2')) }
                         style={{
                             textAlign: 'center',

@@ -35,13 +35,13 @@ export default class Home extends React.Component<Props, State> {
 
     componentDidMount() {
         // 绑定快捷键
-        AcceleratorManager.register(() => this.toggleSideBar(),
+        AcceleratorManager.enable(() => this.toggleSideBar(),
             new CombineKey(KEYS.Q, false, true));
         // send toast if needed
         if (this.props.newGuyHere) {
             let notify = () => toast(
                 <span dangerouslySetInnerHTML={{
-                    __html: Intl.get('', 'Home.Profile.forNewHere')
+                    __html: Intl.get('Home.Profile.forNewHere')
                 }} />,
                 { position: toast.POSITION.BOTTOM_LEFT }
             );
@@ -82,7 +82,7 @@ export default class Home extends React.Component<Props, State> {
                     { [ 'Main', 'KBS', 'Chat', 'Profile', 'Settings' ].map(
                         (v, i) => 
                             <Menu.Item key={v} as='a' onClick={createClickHandler(i)}>
-                                {Intl.get(v, 'Home.NavigationItems.' + v)}
+                                {Intl.get('Home.NavigationItems.' + v)}
                             </Menu.Item>
                     ) }
                 </Sidebar>

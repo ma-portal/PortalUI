@@ -8,6 +8,7 @@ app.use(cors());
 
 // account
 
+// accessible even user is not authorized
 app.get('/account/avatar/:account', (req, rep) => {
     rep.json({
         url: 'http://localhost:8080/static/avatar.jpg'
@@ -21,7 +22,7 @@ app.get('/account/signin/:credential', async (req, rep) => {
     })
 })
 
-app.get('/account/profile/:account', (req, rep) => {
+app.get('/account/profile/', (req, rep) => {
     rep.json({
         account: 'Luncert',
         realName: '李经纬',
@@ -39,7 +40,7 @@ app.get('/account/profile/:account', (req, rep) => {
     })
 })
 
-app.get('/account/project/:account', (req, rep) => {
+app.get('/account/project/', (req, rep) => {
     rep.json([
         {
             name: 'T-W',
@@ -96,6 +97,56 @@ app.get('/studio/news', (req, rep) => {
             createTime: '2019年4月2日',
             description: 'Elliot is a sound engineer living in Nashville who enjoys playing guitar and hanging with his cat.'
         }
+    ])
+})
+
+// chat
+
+app.get('/chat/member', (req, rep) => {
+    rep.json([
+        {
+            account: 'Helen',
+            avatar: 'https://react.semantic-ui.com/images/avatar/small/helen.jpg',
+            online: false,
+            unreceivedMsg: 1
+        },
+        {
+            account: 'Christian',
+            avatar: 'https://react.semantic-ui.com/images/avatar/small/christian.jpg',
+            online: true,
+            unreceivedMsg: 0
+        },
+        {
+            account: 'Daniel',
+            avatar: 'https://react.semantic-ui.com/images/avatar/small/daniel.jpg',
+            online: true,
+            unreceivedMsg: 0
+        }
+    ])
+})
+
+app.get('/chat/history/{chatTarget}', (req, rep) => {
+    rep.json([
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: true
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: false
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: true
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: false
+        },
     ])
 })
 

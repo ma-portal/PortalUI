@@ -30,7 +30,7 @@ class Intl {
         return intl.init(options);
     }
 
-    get<T>(defaultValue: T, key: string): T {
+    get(key: string): any {
         if (key && this.initDone) {
             let keys = key.split('.');
             let v = this.cache[keys[0]];
@@ -40,9 +40,9 @@ class Intl {
             for (let i = 1; i < keys.length && v; i++) {
                 v = v[keys[i]];
             }
-            return v || defaultValue;
+            return v;
         }
-        return defaultValue;
+        return '';
     }
 
     initialized(): boolean { return this.initDone; }

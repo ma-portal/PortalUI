@@ -122,7 +122,7 @@ class AcceleratorManager {
      * @param keys 要绑定的快捷键组合
      * @returns 如果快捷键已经存在，则会绑定失败，返回false，否则返回true
      */
-    public register(handler: () => void, ...keys: CombineKey[]): boolean {
+    public enable(handler: () => void, ...keys: CombineKey[]): boolean {
         let parent = this.root, node: KeyNode, item: CombineKey;
         // 匹配树，遇到不存在的节点即创建
         for (let i = 0; i < keys.length; i++) {
@@ -141,6 +141,24 @@ class AcceleratorManager {
         }
         // 快捷键组合已存在
         return false;
+    }
+
+    public disable(...keys: CombineKey[]): boolean {
+        let parent = this.root, node: KeyNode, item: CombineKey;
+        for (let i = 0; i < keys.length; i++) {
+            item = keys[i];
+            node = parent.matchChild(item) as KeyNode;
+            if (node == null) {
+                // 此时parent节点是匹配得到的最后一个节点
+                if (i === keys.length - 1 && parent.getChildrenNum() == 0) {
+                    // 必须将用于匹配和被匹配的两个链都匹配到最深的节点
+                    parent.handler = null;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
     }
 
 }

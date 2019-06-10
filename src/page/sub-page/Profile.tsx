@@ -38,7 +38,7 @@ export default class Profile extends React.Component<Props> {
     }
 
     componentDidMount() {
-        Axios.get(APIs.account.profile + this.props.account)
+        Axios.get(APIs.account.profile)
             .then((rep) => {
                 for (let key of Object.keys(rep.data)) {
                     this.profile[key] = rep.data[key];
@@ -63,8 +63,8 @@ export default class Profile extends React.Component<Props> {
                                 <Card.Header>{account}</Card.Header>
                                 <Card.Meta>
                                     <strong>{realName}</strong>
-                                    <span>{format(intl.get('Class {classOf}', 'Home.Profile.ClassOf'), { classOf })}</span>
-                                    <span>{format(intl.get('Joined in {year}/{month}', 'Home.Profile.JoinedTime'), { year, month })}</span>
+                                    <span>{format(intl.get('Home.Profile.ClassOf'), { classOf })}</span>
+                                    <span>{format(intl.get('Home.Profile.JoinedTime'), { year, month })}</span>
                                 </Card.Meta>
                                 { (tags as string[]).map((tag, index) =>
                                     <Label key={index} style={{
@@ -101,9 +101,9 @@ export default class Profile extends React.Component<Props> {
                     </Grid.Column>
                     <Grid.Column width={12}>
                         <Tab defaultActiveIndex={1} panes={[
-                            { menuItem: intl.get('Statistics', 'Home.Profile.Tab.Statistics'),
+                            { menuItem: intl.get('Home.Profile.Tab.Statistics'),
                                 render: () => <Statistics /> },
-                            { menuItem: intl.get('Project', 'Home.Profile.Tab.Project'),
+                            { menuItem: intl.get('Home.Profile.Tab.Project'),
                                 render: () => <Project account={this.props.account} /> },
                         ]} />
                     </Grid.Column>
@@ -161,7 +161,7 @@ class Project extends React.Component<Props> {
     }
 
     componentDidMount() {
-        Axios.get(APIs.account.project + this.props.account)
+        Axios.get(APIs.account.project)
             .then((rep) => {
                 this.projects = rep.data;
                 this.forceUpdate();

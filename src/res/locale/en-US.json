@@ -26,8 +26,10 @@
             "notSupported": "Unfortunately, this function is under developing :P. Press <strong>CTRL + Q</strong> to try other funtions."
         },
         "Chat": {
+            "Online": "Online: {num}",
             "SearchInputPlaceholder1": "Search",
-            "SearchInputPlaceholder2": "Press ENTER to finish input"
+            "SearchInputPlaceholder2": "Press ENTER to finish input",
+            "SendMessagePlaceholder": "Press [CTRL + ENTER] to send a message"
         },
         "NavigationItems": {
             "Main": "Home",

@@ -10,19 +10,24 @@ const searchFilter = [
     { key: 'code', text: 'Code', value: 'code' },
 ]
 
+let displayed = false;
+
 export default class KBS extends React.Component {
 
     componentDidMount() {
-        let notify = () => toast.warn(
-            <span dangerouslySetInnerHTML={{
-                __html: Intl.get('', 'Home.KBS.notSupported')
-            }} />,
-            { autoClose: false, position: toast.POSITION.BOTTOM_LEFT }
-        );
-        if (Intl.initialized()) {
-            notify();
-        } else {
-            eventService.subscribe(Events.LocaleInitDone, notify, true);
+        if (!displayed) {
+            let notify = () => toast.warn(
+                <span dangerouslySetInnerHTML={{
+                    __html: Intl.get('Home.KBS.notSupported')
+                }} />,
+                { autoClose: false, position: toast.POSITION.BOTTOM_LEFT }
+            );
+            if (Intl.initialized()) {
+                notify();
+            } else {
+                eventService.subscribe(Events.LocaleInitDone, notify, true);
+            }
+            displayed = true;
         }
     }
 
