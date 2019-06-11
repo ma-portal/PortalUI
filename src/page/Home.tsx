@@ -98,7 +98,7 @@ export default class Home extends React.Component<Props, State> {
                             items={[
                                 <Main />,
                                 <KBS />,
-                                <Chat />,
+                                <Chat account='Luncert' avatar='https://react.semantic-ui.com/images/avatar/small/daniel.jpg' />,
                                 // TODO: replace with real account
                                 <Profile account='Luncert' />,
                                 <Settings />

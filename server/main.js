@@ -130,7 +130,67 @@ app.get('/chat/history/:chatTarget', async (req, rep) => {
     rep.json([
         {
             timestamp: Date.now(),
-            content: 'hi[:emoji=:)][:emoji=:100:]',
+            content: 'hi![:html=<br/>][:emoji=ec-grin][:image=https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2726102536,2091908784&fm=27&gp=0.jpg]I got [:emoji=ec-100] this time![:emoji=ec-innocent]',
+            out: true
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi[:image=https://ss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1873895543.png]',
+            out: false
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: true
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: false
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: true
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: false
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: true
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: false
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: true
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: false
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: true
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
+            out: false
+        },
+        {
+            timestamp: Date.now(),
+            content: 'hi',
             out: true
         },
         {
