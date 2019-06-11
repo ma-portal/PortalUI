@@ -11,3 +11,5 @@ https://www.npmjs.com/package/react-axios
 https://github.com/typicode/json-server#add-custom-routes
 
 https://www.npmjs.com/package/react-vis
+
+https://github.com/banyan/react-emoji

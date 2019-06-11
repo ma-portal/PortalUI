@@ -13,7 +13,7 @@ export default ({
         project:    endpoint('account/project/'),
     },
     chat: {
-        member:     endpoint('chat/member'),
-        history:    endpoint('chat/history')
+        member:     endpoint('chat/member/'),
+        history:    endpoint('chat/history/')
     }
 })

@@ -8,14 +8,14 @@ import Axios from 'axios';
 import Intl from '../com/Intl';
 
 import Input from '../com/Input';
-import Waiting from '../com/Waiting';
 import eventService from '../com/EventService';
 import APIs from '../APIs';
 import BubbleMessage from '../com/BubbleMessage';
+import Loading from '../com/Loading';
 
 interface State {
     justSignin: boolean;
-    waiting: boolean;
+    loading: boolean;
     focusPwInput: boolean;
     avatar: {
         account: string;
@@ -34,7 +34,7 @@ export default class Signin extends React.Component<any, State> {
         super(props);
         this.state = {
             justSignin: false,
-            waiting: false,
+            loading: false,
             focusPwInput: false,
             avatar: {
                 account: '',
@@ -79,7 +79,7 @@ export default class Signin extends React.Component<any, State> {
         } else {
             // 发起验证请求
             let credential = this.account + ':' + this.password;
-            this.setState({waiting: true});
+            this.setState({loading: true});
             Axios.get(APIs.account.signin + credential)
                 .then((rep) => {
                     if (rep.data.identified) {
@@ -88,7 +88,7 @@ export default class Signin extends React.Component<any, State> {
                         Intl.get('Signin.IdentifyFailed');
                     }
                 })
-                .finally(() =>  this.setState({waiting: false}));
+                .finally(() =>  this.setState({loading: false}));
         }
     }
 
@@ -124,7 +124,7 @@ export default class Signin extends React.Component<any, State> {
     }
 
     render() {
-        const { justSignin, waiting, focusPwInput, avatar } = this.state;
+        const { justSignin, loading, focusPwInput, avatar } = this.state;
 
         let signinBarContent = ([
                 <Image key='avatar' src={avatar.url || require('../res/img/default-avatar.png')}
@@ -177,7 +177,7 @@ export default class Signin extends React.Component<any, State> {
                             textAlign: 'center',
                             color: 'white'}}
                         />
-                    { waiting && <Waiting /> }
+                    <Loading actived={loading} />
                 </div>
         ])
         let baseStyle: {[key: string]: any;} = {

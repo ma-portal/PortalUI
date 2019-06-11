@@ -150,7 +150,7 @@ class AcceleratorManager {
             node = parent.matchChild(item) as KeyNode;
             if (node == null) {
                 // 此时parent节点是匹配得到的最后一个节点
-                if (i === keys.length - 1 && parent.getChildrenNum() == 0) {
+                if (i === keys.length - 1 && parent.getChildrenNum() === 0) {
                     // 必须将用于匹配和被匹配的两个链都匹配到最深的节点
                     parent.handler = null;
                     return true;

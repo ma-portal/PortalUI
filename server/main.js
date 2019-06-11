@@ -125,11 +125,12 @@ app.get('/chat/member', (req, rep) => {
     ])
 })
 
-app.get('/chat/history/{chatTarget}', (req, rep) => {
+app.get('/chat/history/:chatTarget', async (req, rep) => {
+    await sleep(1000)
     rep.json([
         {
             timestamp: Date.now(),
-            content: 'hi',
+            content: 'hi[:emoji=:)][:emoji=:100:]',
             out: true
         },
         {

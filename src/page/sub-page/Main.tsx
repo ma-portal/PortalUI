@@ -2,11 +2,12 @@ import React from "react";
 import { Grid, Segment, Pagination, List, Label, Statistic } from "semantic-ui-react";
 import { Motion, spring } from "react-motion";
 import Intl from "../../com/Intl";
-import Waiting from "../../com/Waiting";
 import Input from "../../com/Input";
+import Loading from "../../com/Loading";
 
 interface State {
     focusSearchInput: boolean;
+    loading: boolean;
 }
 
 export default class Main extends React.Component<any, State> {
@@ -16,7 +17,8 @@ export default class Main extends React.Component<any, State> {
     constructor(props: any) {
         super(props);
         this.state = {
-            focusSearchInput: false
+            focusSearchInput: false,
+            loading: false
         };
     }
 
@@ -29,7 +31,7 @@ export default class Main extends React.Component<any, State> {
     }
 
     render() {
-        const { focusSearchInput } = this.state;
+        const { focusSearchInput, loading } = this.state;
         return (
             // adjust the width according to device type
             <Grid style={{
@@ -91,7 +93,7 @@ export default class Main extends React.Component<any, State> {
                                 placeholder={ Intl.get('Home.Main.' + 
                                     (!focusSearchInput ? 'SearchPlaceholder1' : 'SearchPlaceholder2')) }
                                 style={{float: 'right'}} />
-                            <Waiting />
+                            <Loading actived={loading} />
                             <List divided relaxed>
                                 {/* { this.projects.map((e, i) =>
                                     <List.Item key={i}>

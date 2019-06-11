@@ -1,14 +1,17 @@
 import React from "react";
-import { Grid, List, Image, Segment, Input, Label, TextArea, Form } from "semantic-ui-react";
+import { Grid, List, Image, Segment, Input, Label, TextArea, Form, Dimmer, Loader } from "semantic-ui-react";
 import Intl from "../../com/Intl";
 import format from 'string-template';
 import AcceleratorManager, { CombineKey, KEYS } from "../../com/AcceleratorManager";
 import Axios from "axios";
 import APIs from "../../APIs";
 
+const ReactEmoji = require('react-emoji') as any;
+
 interface State {
     focusSearchInput: boolean;
     onlineNumber: number;
+    loading: boolean;
 }
 
 interface Member {
@@ -18,22 +21,32 @@ interface Member {
     unreceivedMsg: number;
 }
 
+interface Message {
+    timestamp: number;
+    content: string;
+    out: boolean;
+}
+
 export default class Chat extends React.Component<any, State> {
 
     constructor(props: any) {
         super(props);
         this.state = {
             focusSearchInput: false,
-            onlineNumber: 3
+            onlineNumber: 3,
+            loading: false
         };
     }
 
-    private members: Member[] = [];
+    private members: {[account: string]: Member} = {};
 
     componentWillMount() {
         Axios.get(APIs.chat.member)
             .then((rep) => {
-                this.members = rep.data;
+                this.members = {};
+                for (let member of rep.data) {
+                    this.members[member.account] = member;
+                }
                 this.forceUpdate();
             });
     }
@@ -53,12 +66,39 @@ export default class Chat extends React.Component<any, State> {
         alert('search for: ' + this.searchKey);
     }
 
+    private chatTarget: Member = {} as Member;
+    private chatHistory: Message[] = [];
+
     chatWith(target: string) {
-        alert('chat with: ' + target);
+        this.setState({loading: true});
+        Axios.get(APIs.chat.history + target)
+            .then((rep) => {
+                this.chatTarget = this.members[target];
+                this.chatHistory = rep.data;
+                this.setState({loading: false});
+            });
     }
 
     render() {
-        const { focusSearchInput, onlineNumber } = this.state;
+        const { focusSearchInput, onlineNumber, loading } = this.state;
+        let memberElems: JSX.Element[] = [];
+        Object.keys(this.members).forEach((key, i) => {
+            let member = this.members[key];
+            memberElems.push(
+                <List.Item key={i} onClick={() => this.chatWith(member.account)}>
+                    <Image avatar src={member.avatar}
+                        style={{filter: member.online ? 'none' : 'grayscale(100%)'}} />
+                    <List.Content>
+                        <List.Header>{member.account}</List.Header>
+                    </List.Content>
+                    { member.unreceivedMsg > 0 &&
+                        <Label color='olive' circular style={{float: 'right'}}>
+                            {member.unreceivedMsg}
+                        </Label>
+                    }
+                </List.Item>
+            );
+        })
         return (
             <Grid style={{
                 width: '70%', height: '100%',
@@ -82,22 +122,7 @@ export default class Chat extends React.Component<any, State> {
                                 placeholder={ Intl.get('Home.Chat.' + 
                                 (!focusSearchInput ? 'SearchInputPlaceholder1' : 'SearchInputPlaceholder2')) }
                                 style={{marginTop: 5}} />
-                            <List animated selection verticalAlign='middle'>
-                                { this.members.map((v, i) => 
-                                    <List.Item onClick={() => this.chatWith(v.account)}>
-                                        <Image avatar src={v.avatar}
-                                            style={{filter: v.online ? 'none' : 'grayscale(100%)'}} />
-                                        <List.Content>
-                                            <List.Header>{v.account}</List.Header>
-                                        </List.Content>
-                                        { v.unreceivedMsg > 0 &&
-                                            <Label color='olive' circular style={{float: 'right'}}>
-                                                {v.unreceivedMsg}
-                                            </Label>
-                                        }
-                                    </List.Item>
-                                ) }
-                            </List>
+                            <List animated selection verticalAlign='middle'>{memberElems}</List>
                         </Segment>
                     </Grid.Column>
                     <Grid.Column width={12}>
@@ -108,18 +133,76 @@ export default class Chat extends React.Component<any, State> {
                                 width: '100%', height: 'calc(100% - 100px)'
                             }}>
                                 <List>
-                                    <List.Item>hi
-                                    </List.Item>
+                                    { this.chatHistory.map((v, i) =>
+                                        <List.Item key={i}>
+                                            <Image avatar src={this.chatTarget.avatar}
+                                                style={{filter: this.chatTarget.online ? 'none' : 'grayscale(100%)'}} />
+                                            <RichText content={v.content} />
+                                        </List.Item>
+                                    ) }
                                 </List>
                             </div>
                             <Form>
                                 <TextArea rows={4} placeholder={Intl.get('Home.Chat.SendMessagePlaceholder')}
                                     style={{resize: 'none'}}/>
                             </Form>
+                            <Dimmer inverted active={loading}>
+                                <Loader />
+                            </Dimmer>
                         </Segment>
                     </Grid.Column>
                 </Grid.Row>              
             </Grid>
+        )
+    }
+
+}
+
+interface RichTextProps {
+    content: string;
+}
+
+class RichText extends React.Component<RichTextProps> {
+
+    parse() {
+        const { content } = this.props;
+        let ret: JSX.Element[] = [];
+        let reg = /\[:(emoji|image)=(.*?)\]/g;
+        let len = content.length, key = 0, lastIndex = reg.lastIndex;
+        while (lastIndex < len) {
+            let item = reg.exec(content);
+
+            if (item) {
+                if (item.index > lastIndex) {
+                    ret.push(<span key={key++}>{content.substring(item.index, lastIndex)}</span>);
+                }
+
+                let type = item[1], value = item[2];
+                if (type === 'emoji') {
+                    ret.push(<span key={key++}>{ReactEmoji.emojify(value)}</span>);
+                } else if (type === 'image') {
+
+                } else {
+                    throw new Error('unknown text command: ' + type + '=' + value);
+                }
+
+                lastIndex = reg.lastIndex;
+            } else break;
+        }
+        if (lastIndex < len) {
+            ret.push(<span key={key++}>{content.substring(lastIndex)}</span>);
+        }
+        return ret;
+    }
+
+    render() {
+        return (
+            <Label style={{
+                marginLeft: 7,
+                backgroundColor: 'rgb(100, 180, 220)'
+            }} >
+                {this.parse()}
+            </Label>
         )
     }
 
