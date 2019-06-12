@@ -14,6 +14,14 @@
         "IdentifyFailed": "您的账号或密码有误"
     },
     "Home": {
+        "NavigationItems": {
+            "Main": "主页",
+            "KBS": "KBS",
+            "Chat": "聊天",
+            "Profile": "个人信息",
+            "Settings": "设置",
+            "Logout": "登出"
+        },
         "Main": {
             "News": "最新资讯",
             "StudioProjects": "工作室项目",
@@ -29,14 +37,8 @@
             "Online": "{num}人在线",
             "SearchInputPlaceholder1": "搜索",
             "SearchInputPlaceholder2": "按下回车结束输入",
-            "SendMessagePlaceholder": "按下 CTRL + ENTER 发送消息"
-        },
-        "NavigationItems": {
-            "Main": "主页",
-            "KBS": "KBS",
-            "Chat": "聊天",
-            "Profile": "个人信息",
-            "Settings": "设置"
+            "SendMessagePlaceholder": "按下 CTRL + ENTER 发送消息",
+            "LoadMoreHistory": "查看更多消息"
         },
         "Profile": {
             "forNewHere": "<span>你好啊，新来的！欢迎来到Mobile AI Portal！试试按下<strong>[CTRL + Q]</strong>打开导航呢！</span>",
@@ -45,6 +47,21 @@
             "Tab": {
                 "Statistics": "统计",
                 "Project": "项目"
+            }
+        },
+        "Settings": {
+            "Profile": {
+                "TabLabel": "个人信息"
+            },
+            "Other": {
+                "TabLabel": "其他",
+                "BackgroundImage": "背景图片",
+                "Language": "语言",
+                "LanguageValues": {
+                    "Chinese": "简体中文",
+                    "English": "英语"
+                },
+                "Save": "保存"
             }
         }
     }

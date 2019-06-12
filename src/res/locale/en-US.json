@@ -14,6 +14,14 @@
         "IdentifyFailed": "invalid account or password"
     },
     "Home": {
+        "NavigationItems": {
+            "Main": "Home",
+            "KBS": "KBS",
+            "Chat": "Chat",
+            "Profile": "Profile",
+            "Settings": "Settings",
+            "Logout": "Logout"
+        },
         "Main": {
             "News": "News",
             "StudioProjects": "Studio Projects",
@@ -29,14 +37,8 @@
             "Online": "Online: {num}",
             "SearchInputPlaceholder1": "Search",
             "SearchInputPlaceholder2": "Press ENTER to finish input",
-            "SendMessagePlaceholder": "Press [CTRL + ENTER] to send a message"
-        },
-        "NavigationItems": {
-            "Main": "Home",
-            "KBS": "KBS",
-            "Chat": "Chat",
-            "Profile": "Profile",
-            "Settings": "Settings"
+            "SendMessagePlaceholder": "Press [CTRL + ENTER] to send a message",
+            "LoadMoreHistory": "load more"
         },
         "Profile": {
             "forNewHere": "Hi, new there! Welcome to Mobile AI Portal! Why don't you press <strong>[CTRL + Q]</strong> to meet something interesting?",
@@ -45,6 +47,21 @@
             "Tab": {
                 "Statistics": "Statistics",
                 "Project": "Project"
+            }
+        },
+        "Settings": {
+            "Profile": {
+                "TabLabel": "Profile"
+            },
+            "Other": {
+                "TabLabel": "Other",
+                "BackgroundImage": "Background Image",
+                "Language": "Language",
+                "LanguageValues": {
+                    "Chinese": "Chinese",
+                    "English": "English"
+                },
+                "Save": "Save"
             }
         }
     }

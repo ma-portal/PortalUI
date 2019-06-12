@@ -20,6 +20,7 @@ interface State {
     activeDimmer: boolean;
     loading: boolean;
     editingMessage: string;
+    moreHistoryAvailable: boolean;
 }
 
 interface Member {
@@ -46,9 +47,10 @@ export default class Chat extends React.Component<Props, State> {
             focusSearchInput: false,
             onlineNumber: 3,
             imageModalOpen: false,
-            activeDimmer: false,
+            activeDimmer: true,
             loading: false,
-            editingMessage: ''
+            editingMessage: '',
+            moreHistoryAvailable: false
         };
     }
 
@@ -84,13 +86,18 @@ export default class Chat extends React.Component<Props, State> {
     private chatHistory: Message[] = [];
 
     chatWith(target: string) {
-        this.setState({loading: true});
+        this.setState({activeDimmer: true, loading: true});
         Axios.get(APIs.chat.history + target)
             .then((rep) => {
                 this.chatTarget = this.members[target];
                 this.chatHistory = rep.data;
-                this.setState({activeDimmer: false, loading: false});
+                this.setState({activeDimmer: false, loading: false, moreHistoryAvailable: true});
+                this.scrollChatBoxToBottom();
             });
+    }
+
+    loadMoreHistory() {
+
     }
 
     parseRichText(content: string) {
@@ -133,14 +140,18 @@ export default class Chat extends React.Component<Props, State> {
         this.setState({imageModalOpen: true});
     }
 
+    scrollChatBoxToBottom() {
+        let elem = (this.refs.chatBox as HTMLElement);
+        elem.scrollTo({top: elem.scrollHeight});
+    }
+
     sendMessage() {
 
     }
 
     render() {
-        const { account, avatar } = this.props;
         const { focusSearchInput, onlineNumber, imageModalOpen,
-                activeDimmer, loading, editingMessage } = this.state;
+                activeDimmer, loading, editingMessage, moreHistoryAvailable } = this.state;
 
         let memberElems: JSX.Element[] = [];
         Object.keys(this.members).forEach((key, i) => {
@@ -166,7 +177,7 @@ export default class Chat extends React.Component<Props, State> {
                 width: '70%', height: '100%',
                 margin: '0px auto'
             }}>
-                <Grid.Row columns={2}>
+                <Grid.Row columns={2} style={{height: '100%'}}>
                     <Grid.Column width={4}>
                         <Segment>
                             <Label ribbon color='blue'>
@@ -187,19 +198,23 @@ export default class Chat extends React.Component<Props, State> {
                             <List animated selection verticalAlign='middle'>{memberElems}</List>
                         </Segment>
                     </Grid.Column>
-                    <Grid.Column width={12}>
-                        <Segment style={{
-                            width: '100%', height: '100%',
-                        }}>
-                            <div style={{
-                                display: 'block', position: 'relative',
-                                width: '100%', height: 'calc(100% - 140px)',
+                    <Grid.Column width={12} style={{height: '100%'}}>
+                        <Segment style={{ height: '100%' }}>
+                            <div ref='chatBox' className='scroller' style={{
+                                height: 'calc(100% - 140px)',
+                                overflowY: 'scroll',
+                                boxSizing: 'border-box',
+                                padding: 3
                             }}>
-                                {/* TODO: scroll */}
-                                <List style={{
-                                    height: '100%',
-                                    display: 'block',
-                                }}>
+                                <List>
+                                    { moreHistoryAvailable &&
+                                        <List.Item style={{textAlign: 'center'}}>
+                                            <Button compact size='mini'
+                                                onClick={() => this.loadMoreHistory()}>
+                                                {Intl.get('Home.Chat.LoadMoreHistory')}
+                                            </Button> 
+                                        </List.Item>
+                                    }
                                     { this.chatHistory.map((v, i) =>
                                         <List.Item key={i} style={{marginTop: 8, marginBottom: 8}}>
                                             <List.Content floated={v.out ? 'right' : 'left'}>

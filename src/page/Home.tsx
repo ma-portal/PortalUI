@@ -29,7 +29,7 @@ export default class Home extends React.Component<Props, State> {
         super(props);
         this.state = {
             sideBarVisible: false,
-            activePage: 2
+            activePage: 4
         };
     }
 
@@ -85,6 +85,9 @@ export default class Home extends React.Component<Props, State> {
                                 {Intl.get('Home.NavigationItems.' + v)}
                             </Menu.Item>
                     ) }
+                    <Menu.Item key='logout' as='a' onClick={() => alert('log out')}>
+                        {Intl.get('Home.NavigationItems.Logout')}
+                    </Menu.Item>
                 </Sidebar>
                 <Sidebar.Pusher dimmed={false} style={{
                     width: '100%', height: '100%',
@@ -106,21 +109,6 @@ export default class Home extends React.Component<Props, State> {
                         <ToastContainer autoClose={8000} />
                     </Segment>
                 </Sidebar.Pusher>
-                {/* <Button onClick={this.toggleSideBar.bind(this)}
-                    style={{
-                        position: 'absolute',
-                        height: 50, width: 50,
-                        bottom: -25, left: '50%',
-                        marginLeft: -25,
-                        borderRadius: '50%',
-                        // border: '5px solid rgb(50, 150, 205)',
-                        backgroundColor: 'rgb(50, 150, 205)',
-                        boxShadow: '0px 0px 2px gray',
-                        margin: 0, padding: 0,
-                        zIndex: 100
-                    }}>
-                    <Icon inverted name='circle outline' style={{position: 'relative', top: -10, margin: '0px auto'}}></Icon>
-                </Button> */}
             </Sidebar.Pushable>
         )
     }

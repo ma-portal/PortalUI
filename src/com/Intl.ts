@@ -12,41 +12,42 @@ const defaultLocale = 'zh-CN';
 
 class Intl {
 
-    private cache: { [key: string]: any };
-    private initDone: boolean;
+    private initDone: boolean = false;
+    private currentLocale: Locale = defaultLocale;
 
     constructor() {
-        this.cache = new Map();
-        this.initDone = false;
-        intl.init({ currentLocale: defaultLocale, locales, warningHandler: () => {} })
+        this.refresh();
+    }
+
+    private refresh() {
+        intl.init({ currentLocale: this.currentLocale, locales, warningHandler: () => {} })
             .then(() => {
-                this.initDone = true;
-                eventService.publish(Events.LocaleInitDone);
-                console.debug('intl-universal initialized')
+                if (!this.initDone) {
+                    this.initDone = true;
+                    eventService.publish(Events.LocaleInitDone);
+                    console.debug('intl-universal initialized');
+                } else {
+                    eventService.publish(Events.LocaleChange);
+                    console.debug('intl-universal locale changed');
+                }
             });
     }
 
-    init(options: ReactIntlUniversalOptions): Promise<void> {
-        return intl.init(options);
+    change(lang: Locale) {
+        this.currentLocale = lang;
+        this.refresh();
     }
 
     get(key: string): any {
-        if (key && this.initDone) {
-            let keys = key.split('.');
-            let v = this.cache[keys[0]];
-            if (!v) {
-                v = intl.get(keys[0]) as any;
-            }
-            for (let i = 1; i < keys.length && v; i++) {
-                v = v[keys[i]];
-            }
-            return v;
-        }
-        return '';
+        return intl.get(key);
     }
 
     initialized(): boolean { return this.initDone; }
 
+    getCurrentLocale(): string { return this.currentLocale; }
+
 }
+
+export type Locale = 'en-US' | 'zh-CN';
 
 export default new Intl();

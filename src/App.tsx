@@ -3,14 +3,6 @@ import Signin from './page/Signin';
 import Home from './page/Home';
 import eventService, { EventHandler } from './com/EventService';
 import Events from './Events';
-import Intl from 'react-intl-universal';
-
-const locales = {
-    'en-US': require('./res/locale/en-US.json'),
-    'zh-CN': require('./res/locale/zh-CN.json'),
-};
-
-const defaultLocale = 'zh-CN';
 
 export default class App extends React.Component {
 
@@ -18,12 +10,6 @@ export default class App extends React.Component {
 
     componentDidMount() {
         // 当locale变化之后刷新整个application
-        Intl.init({ currentLocale: defaultLocale, locales, warningHandler: () => {} })
-            .then(() => {
-                eventService.publish(Events.LocaleInitDone);
-                this.forceUpdate();
-                console.debug('intl-universal initialized');
-            });
         this.localeChangeHandler = eventService.subscribe(Events.LocaleChange,
             () => this.forceUpdate());
     }
