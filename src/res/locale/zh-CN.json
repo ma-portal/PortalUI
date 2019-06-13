@@ -51,7 +51,11 @@
         },
         "Settings": {
             "Profile": {
-                "TabLabel": "个人信息"
+                "TabLabel": "个人信息",
+                "OldPassword": "旧密码",
+                "NewPassword": "新密码",
+                "RepeatPassword": "重复",
+                "Save": "保存"
             },
             "Other": {
                 "TabLabel": "其他",

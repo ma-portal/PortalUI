@@ -51,7 +51,11 @@
         },
         "Settings": {
             "Profile": {
-                "TabLabel": "Profile"
+                "TabLabel": "Profile",
+                "OldPassword": "Old Password",
+                "NewPassword": "New Password",
+                "RepeatPassword": "Repeat",
+                "Save": "Save"
             },
             "Other": {
                 "TabLabel": "Other",
