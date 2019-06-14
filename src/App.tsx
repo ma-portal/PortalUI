@@ -31,8 +31,8 @@ export default class App extends React.Component {
                     width: '100%', height: '100%',
                     top: 0, left: 0,
                 }} />
-                {/* <Signin /> */}
-                <Home newGuyHere={true} />
+                <Signin />
+                {/* <Home newGuyHere={true} /> */}
             </div>
         );
     }

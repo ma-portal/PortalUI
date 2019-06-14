@@ -38,7 +38,7 @@ export default class Profile extends React.Component<Props> {
     }
 
     componentDidMount() {
-        Axios.get(APIs.account.profile)
+        Axios.get(APIs.user.profile)
             .then((rep) => {
                 for (let key of Object.keys(rep.data)) {
                     this.profile[key] = rep.data[key];
@@ -161,7 +161,7 @@ class Project extends React.Component<Props> {
     }
 
     componentDidMount() {
-        Axios.get(APIs.account.project)
+        Axios.get(APIs.user.project)
             .then((rep) => {
                 this.projects = rep.data;
                 this.forceUpdate();

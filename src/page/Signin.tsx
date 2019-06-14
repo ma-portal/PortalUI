@@ -80,7 +80,7 @@ export default class Signin extends React.Component<any, State> {
             // 发起验证请求
             let credential = this.account + ':' + this.password;
             this.setState({loading: true});
-            Axios.get(APIs.account.signin + credential)
+            Axios.get(APIs.user.signin + credential)
                 .then((rep) => {
                     if (rep.data.identified) {
                         this.setState({justSignin: true});
@@ -111,7 +111,7 @@ export default class Signin extends React.Component<any, State> {
     }
 
     loadAvatar() {
-        Axios.get(APIs.account.avatar + this.account)
+        Axios.get(APIs.user.avatar + this.account)
             .then((rep) => {
                 this.setState({
                     avatar: {

@@ -6,11 +6,11 @@ function endpoint(path: string) {
 }
 
 export default ({
-    account: {
-        signin:     endpoint('account/signin/'),
-        avatar:     endpoint('account/avatar/'),
-        profile:    endpoint('account/profile/'),
-        project:    endpoint('account/project/'),
+    user: {
+        signin:     endpoint('user/signin/'),
+        avatar:     endpoint('user/avatar/'),
+        profile:    endpoint('user/profile/'),
+        project:    endpoint('user/project/'),
     },
     chat: {
         member:     endpoint('chat/member/'),
