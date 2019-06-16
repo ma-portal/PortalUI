@@ -59,6 +59,7 @@ export default class Input extends React.Component<Props, State> {
                 placeholder={placeholder} 
                 spellCheck={spellCheck}
                 type={type}
+                autoComplete='current-password'
                 onChange={onChange}
                 onFocus={
                     (event: React.FocusEvent<HTMLInputElement>) => {

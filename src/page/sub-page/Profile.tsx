@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Image, Grid, Tab, List, Label, Icon, GridRow, GridColumn } from "semantic-ui-react";
-import Axios from "axios";
+import Axios from "../../com/Axios";
 import format from 'string-template';
 
 import APIs from "../../APIs";

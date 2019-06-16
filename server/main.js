@@ -1,4 +1,4 @@
-
+﻿
 const express = require('express')
 const cors = require('cors');
 const app = express()
@@ -8,23 +8,23 @@ require('express-ws')(app)
 app.use('/static', express.static('server/static'))
 app.use(cors());
 
-// account
+// user
 
 // accessible even user is not authorized
-app.get('/account/avatar/:account', (req, rep) => {
+app.get('/user/avatar/:account', (req, rep) => {
     rep.json({
         url: 'http://localhost:8080/static/avatar.jpg'
     })
 })
 
-app.get('/account/signin/:credential', async (req, rep) => {
+app.get('/user/signin/:credential', async (req, rep) => {
     await sleep(2000);
     rep.json({
         identified: true
     })
 })
 
-app.get('/account/profile/', (req, rep) => {
+app.get('/user/profile/', (req, rep) => {
     rep.json({
         account: 'Luncert',
         realName: '李经纬',
@@ -42,7 +42,7 @@ app.get('/account/profile/', (req, rep) => {
     })
 })
 
-app.get('/account/project/', (req, rep) => {
+app.get('/user/project/', (req, rep) => {
     rep.json([
         {
             name: 'T-W',

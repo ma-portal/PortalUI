@@ -3,7 +3,7 @@ import { Image } from 'semantic-ui-react';
 import Typed from 'typed.js';
 import {Motion, spring} from 'react-motion';
 import Events from '../Events';
-import Axios from 'axios';
+import Axios from '../com/Axios';
 
 import Intl from '../com/Intl';
 
@@ -12,6 +12,10 @@ import eventService from '../com/EventService';
 import APIs from '../APIs';
 import BubbleMessage from '../com/BubbleMessage';
 import Loading from '../com/Loading';
+
+interface Props {
+    afterSignin: () => void;
+}
 
 interface State {
     justSignin: boolean;
@@ -24,13 +28,13 @@ interface State {
 }
 
 // TODO: there is an obvious delay after the initial animation of signin bar to do signin action
-export default class Signin extends React.Component<any, State> {
+export default class Signin extends React.Component<Props, State> {
 
     private account: string;
     private password: string;
     private bubbleMessage: BubbleMessage;
 
-    constructor(props: any) {
+    constructor(props: Props) {
         super(props);
         this.state = {
             justSignin: false,
@@ -78,14 +82,18 @@ export default class Signin extends React.Component<any, State> {
                 Intl.get('Signin.IdentifyFailed'))
         } else {
             // 发起验证请求
-            let credential = this.account + ':' + this.password;
+            let encode = encodeURIComponent;
+            let data = encode('account') + '=' + encode(this.account)
+                + '&' + encode('password') + '=' + encode(this.password);
             this.setState({loading: true});
-            Axios.get(APIs.user.signin + credential)
+            Axios.post(APIs.user.signin, data,
+                { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                 .then((rep) => {
                     if (rep.data.identified) {
                         this.setState({justSignin: true});
                     } else {
-                        Intl.get('Signin.IdentifyFailed');
+                        this.bubbleMessage.message(
+                            Intl.get('Signin.IdentifyFailed'));
                     }
                 })
                 .finally(() =>  this.setState({loading: false}));
@@ -106,20 +114,25 @@ export default class Signin extends React.Component<any, State> {
     }
 
     afterSignin() {
-        // TODO: jump page
-        alert('jump page');
+        if (this.props.afterSignin) {
+            this.props.afterSignin();
+        }
     }
 
     loadAvatar() {
-        Axios.get(APIs.user.avatar + this.account)
+        Axios.get(APIs.user.avatar + '/' + this.account)
             .then((rep) => {
                 this.setState({
                     avatar: {
                         account: this.account,
-                        url: rep.data.url
+                        url: rep.data.avatar
                     }
                 });
-                console.debug('avatar loaded, account: ' + this.account);
+                if (rep.data.avatar) {
+                    console.debug('avatar loaded, account: ' + this.account);
+                } else {
+                    console.debug('avatar not found for account: ' + this.account);
+                }
             })
     }
 
@@ -153,30 +166,32 @@ export default class Signin extends React.Component<any, State> {
                         fontSize: '2em', color: 'white'
                     }}>Mobile AI Portal</h2>
                     <br/>
-                    <Input transparent onChange={this.inputAccount.bind(this)}
-                        onBlur={() => {
-                            if (this.account &&
-                                this.account !== avatar.account &&
-                                this.valueCheck(this.account))
-                                this.loadAvatar();
+                    <form>
+                        <Input transparent onChange={this.inputAccount.bind(this)}
+                            onBlur={() => {
+                                if (this.account &&
+                                    this.account !== avatar.account &&
+                                    this.valueCheck(this.account))
+                                    this.loadAvatar();
+                                }
                             }
-                        }
-                        onKeyPress={(e) => {if (e.key === 'Enter') this.signin()}}
-                        placeholder={Intl.get('Signin.AccountInputPlaceholder')}
-                        style={{
-                            textAlign: 'center',
-                            color: 'white'}}
-                        />
-                    <Input transparent onChange={this.inputPassword.bind(this)} type='password'
-                        onFocus={() => this.setState({focusPwInput: true})}
-                        onBlur={() => this.setState({focusPwInput: false})}
-                        onKeyPress={(e) => {if (e.key === 'Enter') this.signin()}}
-                        placeholder={ Intl.get('Signin.' + 
-                            (!focusPwInput ? 'PasswordInputPlaceholder1' : 'PasswordInputPlaceholder2')) }
-                        style={{
-                            textAlign: 'center',
-                            color: 'white'}}
-                        />
+                            onKeyPress={(e) => {if (e.key === 'Enter') this.signin()}}
+                            placeholder={Intl.get('Signin.AccountInputPlaceholder')}
+                            style={{
+                                textAlign: 'center',
+                                color: 'white'}}
+                            />
+                        <Input transparent onChange={this.inputPassword.bind(this)} type='password'
+                            onFocus={() => this.setState({focusPwInput: true})}
+                            onBlur={() => this.setState({focusPwInput: false})}
+                            onKeyPress={(e) => {if (e.key === 'Enter') this.signin()}}
+                            placeholder={ Intl.get('Signin.' + 
+                                (!focusPwInput ? 'PasswordInputPlaceholder1' : 'PasswordInputPlaceholder2')) }
+                            style={{
+                                textAlign: 'center',
+                                color: 'white'}}
+                            />
+                    </form>
                     <Loading actived={loading} />
                 </div>
         ])

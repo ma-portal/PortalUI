@@ -3,7 +3,7 @@ import { Grid, List, Image, Segment, Input, Label, TextArea, Form, Dimmer, Loade
 import Intl from "../../com/Intl";
 import format from 'string-template';
 import AcceleratorManager, { CombineKey, KEYS } from "../../com/AcceleratorManager";
-import Axios from "axios";
+import Axios from "../../com/Axios";
 import APIs from "../../APIs";
 import EmojiNames from '../../res/emoji-names.json';
 import 'emoji.css/dist/emoji.min.css';
