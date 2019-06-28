@@ -16,7 +16,7 @@ export default class App extends React.Component<any, State> {
     constructor(props: any) {
         super(props);
         this.state = {
-            activePage: 0
+            activePage: 1
         }
     }
 

@@ -29,7 +29,7 @@ export default class Home extends React.Component<Props, State> {
         super(props);
         this.state = {
             sideBarVisible: false,
-            activePage: 4
+            activePage: 3
         };
     }
 

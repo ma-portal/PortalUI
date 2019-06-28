@@ -100,9 +100,7 @@ export default class Profile extends React.Component<Props> {
                         </Card>
                     </Grid.Column>
                     <Grid.Column width={12}>
-                        <Tab defaultActiveIndex={1} panes={[
-                            { menuItem: intl.get('Home.Profile.Tab.Statistics'),
-                                render: () => <Statistics /> },
+                        <Tab defaultActiveIndex={0} panes={[
                             { menuItem: intl.get('Home.Profile.Tab.Project'),
                                 render: () => <Project account={this.props.account} /> },
                         ]} />
@@ -114,42 +112,73 @@ export default class Profile extends React.Component<Props> {
 
 }
 
-// TODO:
-class Statistics extends React.Component {
-
-    render() {
-        return (
-            <Tab.Pane>
-                <VIS.XYPlot
-                    width={300}
-                    height={300}>
-                    <VIS.HorizontalGridLines />
-                    <VIS.LineSeries
-                        data={[
-                        {x: 1, y: 10},
-                        {x: 2, y: 5},
-                        {x: 3, y: 15}
-                        ]}/>
-                    <VIS.XAxis />
-                    <VIS.YAxis />
-                </VIS.XYPlot>
-            </Tab.Pane>
-        );
-    }
-
-}
-
 interface ProjectEntity {
     name: string;
-    link: string;
-    language: {
-        type: string;
-        color: string;
-    };
-    lastUpdate: string;
+    fork: boolean;
+    disabled: boolean;
+    description: string;
+    htmlUrl: string;
+    language: string;
+    updatedAt: string;
     commit: number;
-    start: number;
+    stargazersCount: number;
+    forksCount: number;
 }
+
+const weeklyCommitCount = [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    20,
+    46,
+    5
+];
 
 class Project extends React.Component<Props> {
 
@@ -164,7 +193,8 @@ class Project extends React.Component<Props> {
         Axios.get(APIs.user.project)
             .then((rep) => {
                 this.projects = rep.data;
-                this.forceUpdate();
+                console.log(this.projects)
+                // this.forceUpdate();
             });
     }
 
@@ -179,23 +209,27 @@ class Project extends React.Component<Props> {
                                     <GridRow columns={2}>
                                         <GridColumn>
                                             <List.Header>
-                                                <Label ribbon color='olive' as='a' href={e.link}>{e.name}</Label>
+                                                <Label ribbon color='olive' as='a' href={e.htmlUrl}>{e.name}</Label>
+                                                {e.fork && <Label circular><Icon name='food' />fork</Label>}
+                                                {e.disabled && <Label circular>disabled</Label>}
                                             </List.Header>
+                                            <p>{e.description}</p>
                                             { e.language &&
                                                 <span className='margin2'>
-                                                    <Icon name='circle thin' style={{color: e.language.color}} />
-                                                    <span>{e.language.type}</span>
-                                                    <Division vertical style={{height: '30%', marginBottom: 0}}/>
+                                                    {/* <Icon name='circle thin' style={{color: e.language.color}} /> */}
+                                                    <span>{e.language}</span>
                                                 </span>
                                             }
-                                            <span className='margin2'>{e.lastUpdate}</span>
+                                            <span className='margin2'>{e.updatedAt}</span>
+                                            <WeeklyCommitCounts width={200} height={50} data={weeklyCommitCount} />
                                         </GridColumn>
                                         <GridColumn style={{
                                             textAlign: 'right',
                                             verticalAlign: 'bottom'
                                         }}>
                                             <Label>{e.commit} commits</Label>
-                                            <Label><Icon name='star' />{e.start}</Label>
+                                            <Label><Icon name='star' />{e.stargazersCount}</Label>
+                                            <Label><Icon name='fork' />{e.forksCount}</Label>
                                         </GridColumn>
                                     </GridRow>
                                 </Grid>
@@ -207,4 +241,41 @@ class Project extends React.Component<Props> {
         );
     }
     
+}
+
+interface WCProps {
+    width: number;
+    height: number;
+    data: number[];
+    style?: any;
+}
+
+class WeeklyCommitCounts extends React.Component<WCProps> {
+
+    componentDidMount() {
+        const { width, height, data } = this.props;
+
+        let canvas = this.refs.canvas as HTMLCanvasElement
+        canvas.width = width
+        canvas.height = height
+
+        let ctx = canvas.getContext('2d')
+        ctx.lineWidth = 1
+        ctx.strokeStyle = 'rgb(100, 190, 170)'
+        ctx.lineJoin = 'round'
+        ctx.moveTo(0, height)
+        let r = width / 52.0
+        data.forEach((v, i) => {
+            ctx.lineTo(r * i, height - v)
+        })
+        ctx.stroke()
+    }
+
+    render() {
+        const {width, height, style} = this.props;
+        return (
+            <canvas ref='canvas' width={width} height={height} style={style} />
+        )
+    }
+
 }
