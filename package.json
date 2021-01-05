@@ -11,7 +11,7 @@
     "@types/react-dom": "16.8.4",
     "@types/react-motion": "^0.0.29",
     "@types/string-template": "^1.0.2",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "emoji.css": "^1.0.4",
     "emojione": "^4.5.0",
     "lodash": "^4.17.11",
